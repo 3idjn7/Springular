@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ProductService } from '../../services/product.service';
 import { Product } from '../../models/product.model';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -17,13 +18,16 @@ export class ProductCreateComponent {
     
   };
 
-  constructor(private productService: ProductService) {}
+  constructor(
+    private productService: ProductService,
+    private router: Router,
+  ) { }
 
   onSubmit() {
     this.productService.addProduct(this.product).subscribe(
       data => {
         console.log('Product created successfully!', data);
-        // Redirect to product list or show a success message
+        this.router.navigate(['/products']);
       },
       error => {
         console.error('Error creating product!', error);
