@@ -1,0 +1,13 @@
+<!-- Add this button for creating a new product -->
+<button (click)="createProduct()">Create Product</button>
+
+<!-- Existing code for listing products -->
+<ul>
+  <li *ngFor="let product of products">
+    {{ product.name }} - {{ product.price | currency }}
+    <!-- Link to edit product -->
+    <button (click)="editProduct(product.id)">Edit</button>
+    <!-- Button to delete product -->
+    <button (click)="deleteProduct(product.id)">Delete</button>
+  </li>
+</ul>

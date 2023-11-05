@@ -1,0 +1,50 @@
+/* You can add global styles to this file, and also import other style files */
+/* Global Styles */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  padding: 20px;
+  background: #f4f4f4;
+  color: #333;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+input[type=text],
+input[type=number],
+textarea,
+button {
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  box-sizing: border-box;
+  /* To include padding in the width */
+}
+
+button {
+  background: #5cb85c;
+  /* Bootstrap 'success' color */
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  opacity: 0.8;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+
+  input[type=text],
+  input[type=number],
+  textarea,
+  button {
+    width: 100%;
+  }
+}

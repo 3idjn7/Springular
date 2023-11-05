@@ -1,0 +1,28 @@
+/* Product List Styles */
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  background: #fff;
+  margin-bottom: 10px;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+button.edit,
+button.delete {
+  padding: 5px 10px;
+  margin-right: 5px;
+}
+
+button.edit {
+  background: #f0ad4e;
+  /* Bootstrap 'warning' color for edit */
+}
+
+button.delete {
+  background: #d9534f;
+  /* Bootstrap 'danger' color for delete */
+}

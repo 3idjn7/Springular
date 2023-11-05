@@ -1,0 +1,14 @@
+/* Product Details Styles */
+div {
+  background: #fff;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+h2 {
+  color: #5cb85c;
+}
+
+p {
+  color: #555;
+}
