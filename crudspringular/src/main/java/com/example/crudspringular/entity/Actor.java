@@ -1,5 +1,7 @@
 package com.example.crudspringular.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,7 +13,6 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Entity
 public class Actor {
     @Id
@@ -21,6 +22,8 @@ public class Actor {
     private String name;
     private LocalDate dateOfBirth;
 
+
     @ManyToMany(mappedBy = "actors")
+    @JsonBackReference
     private Set<Movie> movies = new HashSet<>();
 }

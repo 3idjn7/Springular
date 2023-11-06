@@ -1,0 +1,9 @@
+<!-- genres.component.html -->
+<h2>Genres</h2>
+<ul class="genres">
+  <li *ngFor="let genre of genres">
+    <a [routerLink]="['/genre', genre.id]">{{ genre.name }}</a>
+    <button class="delete" title="delete genre" (click)="delete(genre)">x</button>
+  </li>
+</ul>
+<!-- You can enhance this by adding forms for adding/editing genres -->

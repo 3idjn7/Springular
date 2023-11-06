@@ -5,8 +5,8 @@ import com.example.crudspringular.repository.GenreRepository;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,6 +39,17 @@ public class GenreService {
         Optional<Genre> genre = genreRepository.findById(id);
         log.info("Found genre with ID {}: {}", id, genre.isPresent() ? "present" : "not present");
         return genre;
+    }
+    @PostMapping("/findOrCreate")
+    public Genre findOrCreateByName(String name) {
+        log.info("Attempting to find or create genre with name: {}", name);
+        return genreRepository.findByName(name)
+                .orElseGet(() -> {
+                    log.info("Actor not found, creating new genre with name: {}", name);
+                    Genre newGenre = new Genre();
+                    newGenre.setName(name);
+                    return genreRepository.save(newGenre);
+                });
     }
 
     @Transactional

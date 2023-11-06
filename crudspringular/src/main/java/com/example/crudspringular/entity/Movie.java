@@ -1,5 +1,6 @@
 package com.example.crudspringular.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -10,7 +11,6 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Entity
 public class Movie {
     @Id
@@ -20,8 +20,9 @@ public class Movie {
     private String title;
     private Integer releaseYear;
 
-    @ManyToOne
-    private Genre genre;
+    @ManyToMany
+    @JsonManagedReference
+    private Set<Genre> genre = new HashSet<>();
 
     @ManyToMany
     @JoinTable(
@@ -29,5 +30,6 @@ public class Movie {
             joinColumns = @JoinColumn(name = "movie_id"),
             inverseJoinColumns = @JoinColumn(name = "actor_id")
     )
+    @JsonManagedReference
     private Set<Actor> actors = new HashSet<>();
 }

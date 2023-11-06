@@ -49,6 +49,14 @@ public class GenreController {
         }
     }
 
+    @PostMapping("/findOrCreate")
+    public ResponseEntity<Genre> findOrCreateGenre(@RequestBody String name) {
+        log.info("Received request to find or create genre with name: {}", name);
+        Genre genre = genreService.findOrCreateByName(name);
+        log.info("Returning genre: {}", genre.getName());
+        return ResponseEntity.ok(genre);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteGenre(@PathVariable Long id) {
         log.info("Received request to delete genre with ID: {}", id);

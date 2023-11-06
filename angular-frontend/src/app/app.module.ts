@@ -9,6 +9,11 @@ import { ProductListComponent } from './components/product-list/product-list.com
 import { ProductDetailsComponent } from './components/product-details/product-details.component';
 import { ProductCreateComponent } from './components/product-create/product-create.component';
 import { ProductEditComponent } from './components/product-edit/product-edit.component';
+import { MoviesComponent } from './movies/movies.component';
+import { ActorsComponent } from './actors/actors.component';
+import { GenresComponent } from './genres/genres.component';
+import { MovieFormComponent } from './movie-form/movie-form.component';
+import { HomeComponent } from './home/home.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +21,12 @@ import { ProductEditComponent } from './components/product-edit/product-edit.com
     ProductListComponent,
     ProductDetailsComponent,
     ProductCreateComponent,
-    ProductEditComponent
+    ProductEditComponent,
+    MoviesComponent,
+    ActorsComponent,
+    GenresComponent,
+    MovieFormComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,

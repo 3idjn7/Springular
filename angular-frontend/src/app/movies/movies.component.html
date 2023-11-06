@@ -1,0 +1,29 @@
+<h2>Movies List</h2>
+
+<button (click)="addMovie()">Add Movie</button>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Release Year</th>
+      <th>Genres</th>
+      <th>Actors</th>
+      <th>Director</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let movie of movies">
+      <td>{{ movie.title }}</td>
+      <td>{{ movie.releaseYear }}</td>
+      <td>{{ movie.genreNames }}</td>
+      <td>{{ movie.actorNames }}</td>
+      <td>{{ movie.directorName }}</td>
+      <td>
+        <button (click)="updateMovie(movie.id)">Update</button>
+        <button (click)="deleteMovie(movie.id)">Delete</button>
+      </td>
+    </tr>
+  </tbody>
+</table>

@@ -1,0 +1,24 @@
+/* movie-form.component.css */
+.movie-form {
+  /* Your styles here */
+}
+
+.movie-form form {
+  /* Style your form here */
+}
+
+.movie-form form div {
+  margin-bottom: 10px;
+}
+
+.movie-form form label {
+  /* Style your labels here */
+}
+
+.movie-form form input {
+  /* Style your input fields here */
+}
+
+.movie-form button {
+  /* Style your buttons here */
+}

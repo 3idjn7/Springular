@@ -48,3 +48,78 @@ button:hover {
     width: 100%;
   }
 }
+
+/* New styles for movies and other components */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 25px 0;
+  font-size: 0.9em;
+  min-width: 400px;
+  border-radius: 5px 5px 0 0;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+.table thead tr {
+  background-color: #009879;
+  color: #ffffff;
+  text-align: left;
+}
+
+.table th,
+.table td {
+  padding: 12px 15px;
+}
+
+.table tbody tr {
+  border-bottom: 1px solid #dddddd;
+}
+
+.table tbody tr:nth-of-type(even) {
+  background-color: #f3f3f3;
+}
+
+.table tbody tr:last-of-type {
+  border-bottom: 2px solid #009879;
+}
+
+/* Additional button styles for delete actions etc. */
+.delete {
+  background-color: #ff6347;
+  /* Tomato */
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.delete:hover {
+  background-color: #d9534f;
+  /* Darker tomato */
+}
+
+/* Spacing for form sections */
+.movie-form>div {
+  margin-bottom: 10px;
+}
+
+/* Styling for navigation links */
+.nav-link {
+  /* Existing styles */
+}
+
+.nav-link.active {
+  background-color: #0056b3;
+  /* Darker blue for active state */
+}
+
+/* Enhancements for responsive design */
+@media (max-width: 600px) {
+  /* ... existing responsive styles ... */
+
+  .table {
+    min-width: unset;
+  }
+}

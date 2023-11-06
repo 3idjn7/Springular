@@ -49,6 +49,14 @@ public class ActorController {
         }
     }
 
+    @PostMapping("/findOrCreate")
+    public ResponseEntity<Actor> findOrCreateActor(@RequestBody String name) {
+        log.info("Received request to find or create actor with name: {}", name);
+        Actor actor = actorService.findOrCreateActor(name);
+        log.info("Returning actor: {}", actor.getName());
+        return ResponseEntity.ok(actor);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteActor(@PathVariable Long id) {
         log.info("Received request to delete actor with ID: {}", id);

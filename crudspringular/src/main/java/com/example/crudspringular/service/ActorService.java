@@ -41,6 +41,18 @@ public class ActorService {
     }
 
     @Transactional
+    public Actor findOrCreateActor(String name) {
+        log.info("Attempting to find or create actor with name: {}", name);
+        return actorRepository.findByName(name)
+                .orElseGet(() -> {
+                    log.info("Actor not found, creating new actor with name: {}", name);
+                    Actor newActor = new Actor();
+                    newActor.setName(name);
+                    return actorRepository.save(newActor);
+                });
+    }
+
+    @Transactional
     public void deleteActor(Long id) {
         log.info("Attempting to delete actor with ID: {}", id);
         actorRepository.deleteById(id);

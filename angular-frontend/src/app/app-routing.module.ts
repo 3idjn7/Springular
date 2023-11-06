@@ -4,13 +4,24 @@ import { ProductListComponent } from './components/product-list/product-list.com
 import { ProductDetailsComponent } from './components/product-details/product-details.component';
 import { ProductCreateComponent } from './components/product-create/product-create.component';
 import { ProductEditComponent } from './components/product-edit/product-edit.component';
+import { MovieFormComponent } from './movie-form/movie-form.component';
+import { MoviesComponent } from './movies/movies.component';
+import { HomeComponent } from './home/home.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/products', pathMatch: 'full' },
+  { path: '', redirectTo: '/home', pathMatch: 'full' },
+  { path: 'home', component: HomeComponent },
   { path: 'products', component: ProductListComponent },
-  { path: 'product/:id', component: ProductDetailsComponent },
-  { path: 'create', component: ProductCreateComponent },
-  { path: 'edit/:id', component: ProductEditComponent }
+  { path: 'product/details/:id', component: ProductDetailsComponent },
+  { path: 'product/add', component: ProductCreateComponent },
+  { path: 'product/edit/:id', component: ProductEditComponent },
+  { path: 'movies', component: MoviesComponent },
+  { path: 'movie/add', component: MovieFormComponent },
+  { path: 'movie/edit/:id', component: MovieFormComponent },
+  { path: 'add-movie', component: MovieFormComponent },
+  
+
+  { path: '**', redirectTo: '/home' }
 ];
 
 @NgModule({

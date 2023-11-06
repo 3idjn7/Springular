@@ -1,5 +1,6 @@
 package com.example.crudspringular.controller;
 
+import com.example.crudspringular.dto.MovieDto;
 import com.example.crudspringular.entity.Movie;
 import com.example.crudspringular.service.MovieService;
 import lombok.extern.slf4j.Slf4j;
@@ -21,8 +22,9 @@ public class MovieController {
     }
 
     @PostMapping
-    public ResponseEntity<Movie> createMovie(@RequestBody Movie movie) {
-        log.info("Received request to create movie: {}", movie.getTitle());
+    public ResponseEntity<Movie> createMovie(@RequestBody MovieDto movieDto) {
+        log.info("Received request to create movie: {}", movieDto.getTitle());
+        Movie movie = movieService.createMovieFromDto(movieDto);
         Movie savedMovie = movieService.saveMovie(movie);
         log.info("Created movie with ID: {}", savedMovie.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body(savedMovie);
@@ -43,6 +45,22 @@ public class MovieController {
         if (movie.isPresent()) {
             log.info("Returning movie with ID: {}", id);
             return ResponseEntity.ok(movie.get());
+        } else {
+            log.info("Movie with ID: {} not found", id);
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Movie> updateMovie(@PathVariable Long id, @RequestBody MovieDto movieDto) {
+        log.info("Received request to update movie with ID: {}", id);
+        Optional<Movie> currentMovie = movieService.findMovieById(id);
+
+        if (currentMovie.isPresent()) {
+            Movie updatedMovie = movieService.updateMovieFromDto(currentMovie.get(), movieDto);
+            Movie savedMovie = movieService.saveMovie(updatedMovie);
+            log.info("Updated movie with ID: {}", savedMovie.getId());
+            return ResponseEntity.ok(savedMovie);
         } else {
             log.info("Movie with ID: {} not found", id);
             return ResponseEntity.notFound().build();
