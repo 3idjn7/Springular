@@ -9,8 +9,9 @@
       <input type="text" id="director" formControlName="director" class="form-control" required>
     </div>
     <div class="form-group">
-      <label for="releaseDate">Release Date</label>
-      <input type="date" id="releaseDate" formControlName="releaseDate" class="form-control" required>
+      <label for="releaseYear">Release Year</label>
+      <input type="number" id="releaseYear" formControlName="releaseYear" class="form-control" required min="1900"
+        max="2099">
     </div>
     <div class="form-group">
       <label for="actors">Actors</label>

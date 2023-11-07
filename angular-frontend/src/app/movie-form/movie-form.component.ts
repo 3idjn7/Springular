@@ -26,7 +26,7 @@ export class MovieFormComponent implements OnInit {
     this.movieForm = this.fb.group({
       title: ['', Validators.required],
       director: ['', Validators.required],
-      releaseDate: ['', Validators.required],
+      releaseYear: ['', [Validators.required, Validators.pattern(/^\d{4}$/)]],
       actors: [[]],
       genres: [[]],
     });
@@ -48,8 +48,10 @@ export class MovieFormComponent implements OnInit {
   }
 
   onSubmit(): void {
-  if (this.movieForm.valid) {
-    const movieData = this.movieForm.value;
+    if (this.movieForm.valid) {
+      let movieData = this.movieForm.value;
+      movieData.releaseYear = parseInt(movieData.releaseYear, 10);
+      console.log('Selected genres:', movieData.genres);
     if (this.isEdit) {
       this.movieService.updateMovie(movieData.id, movieData).subscribe(result => {
         // Handle result

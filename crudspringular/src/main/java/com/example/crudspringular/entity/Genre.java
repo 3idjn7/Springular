@@ -1,5 +1,6 @@
 package com.example.crudspringular.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,8 +19,8 @@ public class Genre {
     private Long id;
 
     private String name;
-    private String description;
 
-    @OneToMany(mappedBy = "genre")
+    @ManyToMany(mappedBy = "genres")
+    @JsonBackReference
     private Set<Movie> movies = new HashSet<>();
 }

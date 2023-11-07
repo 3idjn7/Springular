@@ -1,5 +1,5 @@
 // actor.model.ts
-export class Actor {
-  id!: number;
-  name!: string;
+export interface Actor {
+  id: number;
+  name: string;
 }

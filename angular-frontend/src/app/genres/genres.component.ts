@@ -11,31 +11,43 @@ export class GenresComponent implements OnInit {
   genres: Genre[] = [];
   newGenre: string = ''; // New property for binding with the input for adding a new genre
 
-  constructor(private genreService: GenreService) {}
+  constructor(private genreService: GenreService) { }
 
   ngOnInit() {
+    console.log('GenresComponent initialized');
     this.getGenres();
   }
   
   // This retrieves the genres when the component initializes.
   getGenres(): void {
+    console.log('Fetching genres...');
     this.genreService.getGenres()
-      .subscribe(genres => this.genres = genres);
+      .subscribe(genres => {
+        console.log('Genres fetched:', genres);
+        this.genres = genres;
+      });
   }
 
   // Method to handle deletion of a genre
   delete(genre: Genre): void {
+    console.log('Deleting genre:', genre);
     this.genres = this.genres.filter(g => g !== genre);
-    this.genreService.deleteGenre(genre.id).subscribe();
+    this.genreService.deleteGenre(genre.id).subscribe(() => {
+      console.log(`Genre with id ${genre.id} deleted`);
+    });
   }
 
   // Method to handle adding a new genre
   addGenre(): void {
-    if (this.newGenre) { // Only attempt to add if the field is not empty
+    if (this.newGenre) {
+      console.log('Adding genre:', this.newGenre);
       this.genreService.addGenre(this.newGenre).subscribe(genre => {
-        this.genres.push(genre); // Add the new genre to the local array
-        this.newGenre = ''; // Reset the input after adding
+        console.log('Genre added:', genre);
+        this.genres.push(genre);
+        this.newGenre = '';
       });
+    } else {
+      console.log('New genre input is empty. No genre added.');
     }
   }
 }

@@ -13,6 +13,7 @@ export class GenreService {
   constructor(private http: HttpClient) {}
 
   getGenres(): Observable<Genre[]> {
+    console.log('GenreService: getGenres called');
     return this.http.get<Genre[]>(this.genresUrl);
   }
 
@@ -22,12 +23,13 @@ export class GenreService {
   }
 
   addGenre(name: string): Observable<Genre> {
+  console.log(`GenreService: addGenre called with name '${name}'`);
   return this.http.post<Genre>(this.genresUrl, { name });
 }
 
   deleteGenre(id: number): Observable<any> {
-    const url = `${this.genresUrl}/${id}`;
-    return this.http.delete(url);
+    console.log(`GenreService: deleteGenre called with id ${id}`);
+    return this.http.delete(`${this.genresUrl}/${id}`);
   }
 
   updateGenre(genre: Genre): Observable<any> {

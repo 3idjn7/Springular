@@ -51,11 +51,10 @@ public class ActorService {
         log.info("Deleted actor with ID: {}", id);
     }
 
-    private ActorDTO convertToDto(Actor actor) {
+    public ActorDTO convertToDto(Actor actor) {
         ActorDTO actorDTO = new ActorDTO();
         actorDTO.setId(actor.getId());
         actorDTO.setName(actor.getName());
-        actorDTO.setDateOfBirth(actor.getDateOfBirth());
         // Map other fields as necessary
         return actorDTO;
     }
@@ -64,7 +63,6 @@ public class ActorService {
         Actor actor = new Actor();
         actor.setId(actorDTO.getId());
         actor.setName(actorDTO.getName());
-        actor.setDateOfBirth(actorDTO.getDateOfBirth());
         // Map other fields as necessary
         return actor;
     }

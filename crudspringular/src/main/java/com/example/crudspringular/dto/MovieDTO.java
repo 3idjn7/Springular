@@ -9,6 +9,6 @@ public class MovieDTO {
     private Long id;
     private String title;
     private Integer releaseYear;
-    private GenreDTO genre;
+    private Set<GenreDTO> genres;
     private Set<ActorDTO> actors;
 }

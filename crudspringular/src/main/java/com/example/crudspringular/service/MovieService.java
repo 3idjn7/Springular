@@ -1,22 +1,31 @@
 package com.example.crudspringular.service;
 
+import com.example.crudspringular.dto.ActorDTO;
+import com.example.crudspringular.dto.GenreDTO;
 import com.example.crudspringular.dto.MovieDTO;
 import com.example.crudspringular.entity.Movie;
 import com.example.crudspringular.repository.MovieRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 public class MovieService {
     private final MovieRepository movieRepository;
+    private final GenreService genreService;
+    private final ActorService actorService;
 
-    public MovieService(MovieRepository movieRepository) {
+    @Autowired
+    public MovieService(MovieRepository movieRepository, GenreService genreService, ActorService actorService) {
         this.movieRepository = movieRepository;
+        this.genreService = genreService;
+        this.actorService = actorService;
     }
 
     public MovieDTO saveMovie(MovieDTO movieDTO) {
@@ -56,7 +65,21 @@ public class MovieService {
         movieDTO.setId(movie.getId());
         movieDTO.setTitle(movie.getTitle());
         movieDTO.setReleaseYear(movie.getReleaseYear());
-        // Map other fields as necessary
+
+
+        Set<GenreDTO> genreDTOs = movie.getGenres().stream()
+                .map(genreService::convertToDto)
+                .collect(Collectors.toSet());
+        movieDTO.setGenres(genreDTOs); // Now this should work since MovieDTO expects a Set<GenreDTO>
+
+        // Since actors is already a Set<ActorDTO>, we keep it as is
+        Set<ActorDTO> actorDTOs = movie.getActors().stream()
+                .map(actorService::convertToDto)
+                .collect(Collectors.toSet());
+        movieDTO.setActors(actorDTOs);
+
+        // ... map other fields as necessary
+
         return movieDTO;
     }
 
@@ -65,6 +88,8 @@ public class MovieService {
         movie.setId(movieDTO.getId());
         movie.setTitle(movieDTO.getTitle());
         movie.setReleaseYear(movieDTO.getReleaseYear());
+
+
         // Map other fields as necessary
         return movie;
     }

@@ -20,10 +20,15 @@ public class Movie {
     private String title;
     private Integer releaseYear;
 
-    @ManyToOne
-    private Genre genre;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "movie_genre",
+            joinColumns = @JoinColumn(name = "movie_id"),
+            inverseJoinColumns = @JoinColumn(name = "genre_id")
+    )
+    private Set<Genre> genres = new HashSet<>();
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "movie_actor",
             joinColumns = @JoinColumn(name = "movie_id"),

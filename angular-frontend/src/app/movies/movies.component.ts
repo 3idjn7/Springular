@@ -18,31 +18,47 @@ export class MoviesComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    console.log('MoviesComponent initialized');
     this.reloadData();
   }
 
     reloadData() {
+      console.log('Reloading movie data...');
       this.movieService.getMovies().subscribe(data => {
-        console.log('Raw movie data:', data);
-        this.movies = data.map((movie: any) => {
-          // Log the raw genre and actors to see their structure
+        // Log raw movie data
+        console.log('Data from getMovies:', data);
+
+        const processedMovies = data.map((movie: any) => {
+          // Log the raw genre and actors to see their structure for each movie
+          console.log('Processing movie:', movie);
           console.log('Raw genre:', movie.genre);
           console.log('Raw actors:', movie.actors);
-          
-          return {
+          const genreNames = movie.genres && movie.genres.length > 0
+              ? movie.genres.map((g: { name: any; }) => g.name).join(', ')
+              : 'N/A';
+
+          const processedMovie = {
             ...movie,
-            // Since genre is not an array, we access its name directly
-            genreName: movie.genre ? movie.genre.name : 'N/A', 
-            // We map the actors if they exist, otherwise provide an empty string
+            genreNames: genreNames,
             actorNames: movie.actors && movie.actors.length > 0
                         ? movie.actors.map((actor: any) => actor.name).join(', ')
-                        : 'No actors', // Placeholder for no actors
-            // Director is not part of the data as per your current DTO
-            // directorName: movie.director ? movie.director.name : 'N/A' // If director existed
+                        : 'No actors',
+            releaseYear: movie.releaseYear || 'Unknown',
           };
+
+          // Log the processed movie object
+          console.log('Processed movie:', processedMovie);
+
+          return processedMovie;
         });
-      }, error => console.log(error));
+
+        // Log the fully processed movies array
+        console.log('Movies with genres processed:', processedMovies);
+
+        this.movies = processedMovies;
+      }, error => console.log('Error fetching movies:', error));
     }
+
 
 
   addMovie(): void {

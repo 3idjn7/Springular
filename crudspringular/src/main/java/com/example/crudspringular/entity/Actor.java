@@ -19,7 +19,6 @@ public class Actor {
     private Long id;
 
     private String name;
-    private LocalDate dateOfBirth;
 
     @ManyToMany(mappedBy = "actors")
     @JsonBackReference

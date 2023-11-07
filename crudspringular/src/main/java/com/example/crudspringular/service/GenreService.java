@@ -51,11 +51,10 @@ public class GenreService {
         log.info("Deleted genre with ID: {}", id);
     }
 
-    private GenreDTO convertToDto(Genre genre) {
+    public GenreDTO convertToDto(Genre genre) {
         GenreDTO genreDTO = new GenreDTO();
         genreDTO.setId(genre.getId());
         genreDTO.setName(genre.getName());
-        // Map other fields as necessary
         return genreDTO;
     }
 
@@ -63,7 +62,6 @@ public class GenreService {
         Genre genre = new Genre();
         genre.setId(genreDTO.getId());
         genre.setName(genreDTO.getName());
-        // Map other fields as necessary
         return genre;
     }
 }
