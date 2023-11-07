@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 })
 export class MoviesComponent implements OnInit {
 
-  movies: any;
+  movies!: any[];
 
   constructor(
     private movieService: MovieService,
@@ -21,23 +21,40 @@ export class MoviesComponent implements OnInit {
     this.reloadData();
   }
 
-  reloadData() {
-  this.movieService.getMovies().subscribe(data => {
-    console.log('Raw movie data:', data);
-        this.movies = data.map((movie: any) => ({
-      ...movie,
-      genreNames: movie.genre?.map((genre: any) => JSON.parse(genre.name).name).join(', '),
-      actorNames: movie.actors?.map((actor: any) => JSON.parse(actor.name).name).join(', '),
-    
-      directorName: movie.director ? JSON.parse(movie.director.name).name : undefined
-    }));
-
-  }, error => console.log(error));
-}
+    reloadData() {
+      this.movieService.getMovies().subscribe(data => {
+        console.log('Raw movie data:', data);
+        this.movies = data.map((movie: any) => {
+          // Log the raw genre and actors to see their structure
+          console.log('Raw genre:', movie.genre);
+          console.log('Raw actors:', movie.actors);
+          
+          return {
+            ...movie,
+            // Since genre is not an array, we access its name directly
+            genreName: movie.genre ? movie.genre.name : 'N/A', 
+            // We map the actors if they exist, otherwise provide an empty string
+            actorNames: movie.actors && movie.actors.length > 0
+                        ? movie.actors.map((actor: any) => actor.name).join(', ')
+                        : 'No actors', // Placeholder for no actors
+            // Director is not part of the data as per your current DTO
+            // directorName: movie.director ? movie.director.name : 'N/A' // If director existed
+          };
+        });
+      }, error => console.log(error));
+    }
 
 
   addMovie(): void {
     this.router.navigate(['/add-movie']);
+  }
+
+  addActor(): void {
+    this.router.navigate(['/add-actor']);
+  }
+
+  addGenre(): void {
+    this.router.navigate(['/add-genre']); 
   }
 
   deleteMovie(id: number) {

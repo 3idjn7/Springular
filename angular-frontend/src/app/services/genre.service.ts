@@ -1,3 +1,4 @@
+// genre.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -20,9 +21,9 @@ export class GenreService {
     return this.http.get<Genre>(url);
   }
 
-  addGenre(genre: Genre): Observable<Genre> {
-    return this.http.post<Genre>(this.genresUrl, genre);
-  }
+  addGenre(name: string): Observable<Genre> {
+  return this.http.post<Genre>(this.genresUrl, { name });
+}
 
   deleteGenre(id: number): Observable<any> {
     const url = `${this.genresUrl}/${id}`;

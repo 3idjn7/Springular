@@ -1,6 +1,6 @@
 package com.example.crudspringular.controller;
 
-import com.example.crudspringular.entity.Genre;
+import com.example.crudspringular.dto.GenreDTO;
 import com.example.crudspringular.service.GenreService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -21,40 +21,30 @@ public class GenreController {
     }
 
     @PostMapping
-    public ResponseEntity<Genre> createGenre(@RequestBody Genre genre) {
-        log.info("Received request to create genre: {}", genre.getName());
-        Genre savedGenre = genreService.saveGenre(genre);
-        log.info("Created genre with ID: {}", savedGenre.getId());
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedGenre);
+    public ResponseEntity<GenreDTO> createGenre(@RequestBody GenreDTO genreDTO) {
+        log.info("Received request to create genre: {}", genreDTO.getName());
+        GenreDTO savedGenreDTO = genreService.saveGenre(genreDTO);
+        log.info("Created genre with ID: {}", savedGenreDTO.getId());
+        return new ResponseEntity<>(savedGenreDTO, HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity<List<Genre>> getAllGenres() {
+    public ResponseEntity<List<GenreDTO>> getAllGenres() {
         log.info("Received request to list all genres");
-        List<Genre> genres = genreService.findAllGenres();
-        log.info("Returning {} genres", genres.size());
-        return ResponseEntity.ok(genres);
+        List<GenreDTO> genreDTOs = genreService.findAllGenres();
+        log.info("Returning {} genres", genreDTOs.size());
+        return ResponseEntity.ok(genreDTOs);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Genre> getGenreById(@PathVariable Long id) {
+    public ResponseEntity<GenreDTO> getGenreById(@PathVariable Long id) {
         log.info("Received request to get genre with ID: {}", id);
-        Optional<Genre> genre = genreService.findGenreById(id);
-        if (genre.isPresent()) {
-            log.info("Returning genre with ID: {}", id);
-            return ResponseEntity.ok(genre.get());
-        } else {
-            log.info("Genre with ID: {} not found", id);
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @PostMapping("/findOrCreate")
-    public ResponseEntity<Genre> findOrCreateGenre(@RequestBody String name) {
-        log.info("Received request to find or create genre with name: {}", name);
-        Genre genre = genreService.findOrCreateByName(name);
-        log.info("Returning genre: {}", genre.getName());
-        return ResponseEntity.ok(genre);
+        Optional<GenreDTO> genreDTO = genreService.findGenreById(id);
+        return genreDTO.map(ResponseEntity::ok)
+                .orElseGet(() -> {
+                    log.info("Genre with ID: {} not found", id);
+                    return ResponseEntity.notFound().build();
+                });
     }
 
     @DeleteMapping("/{id}")

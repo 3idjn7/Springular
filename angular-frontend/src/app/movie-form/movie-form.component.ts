@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { forkJoin } from 'rxjs';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MovieService } from '../services/movie.service';
-import { GenreService } from '../services/genre.service';
+import { Actor } from '../models/actor.model';
+import { Genre } from '../models/genre.model';
 import { ActorService } from '../services/actor.service';
+import { GenreService } from '../services/genre.service';
 
 @Component({
   selector: 'app-movie-form',
@@ -11,72 +12,58 @@ import { ActorService } from '../services/actor.service';
   styleUrls: ['./movie-form.component.css']
 })
 export class MovieFormComponent implements OnInit {
-  movie: any = {
-    title: '',
-    releaseYear: null,
-    genres: [],
-    actors: []
-  }; 
-  genreInput: string = '';
-  actorsInput: string = '';
-  editMode: boolean = false;
+  movieForm: FormGroup;
+  actors: Actor[] = [];
+  genres: Genre[] = [];
+  isEdit = false;
 
   constructor(
+    private fb: FormBuilder,
     private movieService: MovieService,
-    private genreService: GenreService,
     private actorService: ActorService,
-    private route: ActivatedRoute,
-    private router: Router
-  ) {}
-
-  ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
-      const movieId = params.get('id');
-      if (movieId) {
-        this.editMode = true;
-        this.movieService.getMovie(+movieId).subscribe(movie => {
-          this.movie = movie;
-          this.genreInput = movie.genres.map((genre: { name: any; }) => genre.name).join(', ');
-          this.actorsInput = movie.actors.map((actor: { name: any; }) => actor.name).join(', ');
-        });
-      }
+    private genreService: GenreService,
+  ) {
+    this.movieForm = this.fb.group({
+      title: ['', Validators.required],
+      director: ['', Validators.required],
+      releaseDate: ['', Validators.required],
+      actors: [[]],
+      genres: [[]],
     });
   }
 
-  saveMovie(): void {
-    const genreNames = this.genreInput.split(',').map(name => name.trim());
-    const genreObservables = genreNames.map(name => this.genreService.findOrCreateGenre(name));
-    
-    forkJoin(genreObservables).subscribe((genres: any[]) => { 
-      const genreIds = genres.map(genre => genre.id);
-      
-      const actorNames = this.actorsInput.split(',').map(name => name.trim());
-      const actorObservables = actorNames.map(name => this.actorService.findOrCreateActor(name));
-      
-      forkJoin(actorObservables).subscribe((actors: any[]) => {
-        const actorIds = actors.map(actor => actor.id);
-        
-        const movieDto = {
-          title: this.movie.title,
-          releaseYear: this.movie.releaseYear,
-          genreIds: genreIds,
-          actorIds: actorIds
-        };
+  ngOnInit() {
+    this.getActors();
+    this.getGenres();
+  }
 
-        if (this.editMode) {
-          this.movieService.updateMovie(this.movie.id, movieDto).subscribe(() => {
-            this.router.navigate(['/movies']);
-          });
-        } else {
-          this.movieService.addMovie(movieDto).subscribe(() => {
-            this.router.navigate(['/movies']);
-          });
-        }
+  getActors(): void {
+    this.actorService.getActors()
+      .subscribe(actors => this.actors = actors);
+  }
+
+  getGenres(): void {
+    this.genreService.getGenres()
+      .subscribe(genres => this.genres = genres);
+  }
+
+  onSubmit(): void {
+  if (this.movieForm.valid) {
+    const movieData = this.movieForm.value;
+    if (this.isEdit) {
+      this.movieService.updateMovie(movieData.id, movieData).subscribe(result => {
+        // Handle result
+        console.log(result);
       });
-    });
+    } else {
+      this.movieService.addMovie(movieData).subscribe(result => {
+        // Handle result
+        console.log(result);
+      });
+    }
   }
+}
 
-  cancel(): void {
-    this.router.navigate(['/movies']);
-  }
+
+  // More methods for form actions if needed
 }

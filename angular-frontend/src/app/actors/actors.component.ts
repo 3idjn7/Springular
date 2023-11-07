@@ -9,6 +9,7 @@ import { Actor } from '../models/actor.model';
 })
 export class ActorsComponent implements OnInit {
   actors: Actor[] = [];
+  newActor: string = '';
 
   constructor(private actorService: ActorService) {}
 
@@ -24,6 +25,15 @@ export class ActorsComponent implements OnInit {
   delete(actor: Actor): void {
     this.actors = this.actors.filter(h => h !== actor);
     this.actorService.deleteActor(actor.id).subscribe();
+  }
+
+  addActor(): void {
+    if (this.newActor) {
+      this.actorService.addActor(this.newActor).subscribe(actor => {
+        this.actors.push(actor);
+        this.newActor = ''; // Reset the input after adding
+      });
+    }
   }
 
   // Add more methods for editing, adding actors if needed

@@ -20,9 +20,8 @@ public class Movie {
     private String title;
     private Integer releaseYear;
 
-    @ManyToMany
-    @JsonManagedReference
-    private Set<Genre> genre = new HashSet<>();
+    @ManyToOne
+    private Genre genre;
 
     @ManyToMany
     @JoinTable(

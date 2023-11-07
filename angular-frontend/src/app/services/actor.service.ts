@@ -1,3 +1,4 @@
+// actor.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -20,8 +21,8 @@ export class ActorService {
     return this.http.get<Actor>(url);
   }
 
-  addActor(actor: Actor): Observable<Actor> {
-    return this.http.post<Actor>(this.actorsUrl, actor);
+  addActor(name: string): Observable<Actor> {
+    return this.http.post<Actor>(this.actorsUrl, { name });
   }
 
   deleteActor(id: number): Observable<any> {

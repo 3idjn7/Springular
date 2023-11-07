@@ -1,5 +1,9 @@
 <!-- actors.component.html -->
 <h2>Actors</h2>
+<div>
+  <input type="text" [(ngModel)]="newActor" placeholder="New Actor Name">
+  <button (click)="addActor()">Add Actor</button>
+</div>
 <ul class="actors">
   <li *ngFor="let actor of actors">
     <a [routerLink]="['/actor', actor.id]">{{ actor.name }}</a>

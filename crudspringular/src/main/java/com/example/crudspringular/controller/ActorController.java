@@ -1,6 +1,6 @@
 package com.example.crudspringular.controller;
 
-import com.example.crudspringular.entity.Actor;
+import com.example.crudspringular.dto.ActorDTO;
 import com.example.crudspringular.service.ActorService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -21,40 +21,30 @@ public class ActorController {
     }
 
     @PostMapping
-    public ResponseEntity<Actor> createActor(@RequestBody Actor actor) {
-        log.info("Received request to create actor: {}", actor.getName());
-        Actor savedActor = actorService.saveActor(actor);
-        log.info("Created actor with ID: {}", savedActor.getId());
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedActor);
+    public ResponseEntity<ActorDTO> createActor(@RequestBody ActorDTO actorDTO) {
+        log.info("Received request to create actor: {}", actorDTO.getName());
+        ActorDTO savedActorDTO = actorService.saveActor(actorDTO);
+        log.info("Created actor with ID: {}", savedActorDTO.getId());
+        return new ResponseEntity<>(savedActorDTO, HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity<List<Actor>> getAllActors() {
+    public ResponseEntity<List<ActorDTO>> getAllActors() {
         log.info("Received a request to list all actors");
-        List<Actor> actors = actorService.findAllActors();
-        log.info("Returning {} actors", actors.size());
-        return ResponseEntity.ok(actors);
+        List<ActorDTO> actorDTOs = actorService.findAllActors();
+        log.info("Returning {} actors", actorDTOs.size());
+        return ResponseEntity.ok(actorDTOs);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Actor> getActorById(@PathVariable Long id) {
+    public ResponseEntity<ActorDTO> getActorById(@PathVariable Long id) {
         log.info("Received request to get actor with ID: {}", id);
-        Optional<Actor> actor = actorService.findActorById(id);
-        if (actor.isPresent()) {
-            log.info("Returning actor with ID: {}", id);
-            return ResponseEntity.ok(actor.get());
-        } else {
-            log.info("Actor with ID: {} not found", id);
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @PostMapping("/findOrCreate")
-    public ResponseEntity<Actor> findOrCreateActor(@RequestBody String name) {
-        log.info("Received request to find or create actor with name: {}", name);
-        Actor actor = actorService.findOrCreateActor(name);
-        log.info("Returning actor: {}", actor.getName());
-        return ResponseEntity.ok(actor);
+        Optional<ActorDTO> actorDTO = actorService.findActorById(id);
+        return actorDTO.map(ResponseEntity::ok)
+                .orElseGet(() -> {
+                    log.info("Actor with ID: {} not found", id);
+                    return ResponseEntity.notFound().build();
+                });
     }
 
     @DeleteMapping("/{id}")

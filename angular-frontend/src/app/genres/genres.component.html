@@ -1,5 +1,9 @@
 <!-- genres.component.html -->
 <h2>Genres</h2>
+<div>
+  <input type="text" [(ngModel)]="newGenre" placeholder="New Genre Name">
+  <button (click)="addGenre()">Add Genre</button>
+</div>
 <ul class="genres">
   <li *ngFor="let genre of genres">
     <a [routerLink]="['/genre', genre.id]">{{ genre.name }}</a>

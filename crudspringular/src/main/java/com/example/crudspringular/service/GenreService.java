@@ -1,14 +1,14 @@
 package com.example.crudspringular.service;
 
+import com.example.crudspringular.dto.GenreDTO;
 import com.example.crudspringular.entity.Genre;
 import com.example.crudspringular.repository.GenreRepository;
-import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -19,43 +19,51 @@ public class GenreService {
         this.genreRepository = genreRepository;
     }
 
-    @Transactional
-    public Genre saveGenre(Genre genre) {
-        log.info("Attempting to save genre: {}", genre.getName());
+    public GenreDTO saveGenre(GenreDTO genreDTO) {
+        log.info("Attempting to save genre: {}", genreDTO.getName());
+        Genre genre = convertToEntity(genreDTO);
         Genre savedGenre = genreRepository.save(genre);
-        log.info("Saved genre: {}", savedGenre.getName());
-        return savedGenre;
+        GenreDTO savedGenreDTO = convertToDto(savedGenre);
+        log.info("Saved genre: {}", savedGenreDTO.getName());
+        return savedGenreDTO;
     }
 
-    public List<Genre> findAllGenres() {
+    public List<GenreDTO> findAllGenres() {
         log.info("Attempting to fetch all genres");
-        List<Genre> genres = genreRepository.findAll();
+        List<GenreDTO> genres = genreRepository.findAll().stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
         log.info("Fetched {} genres", genres.size());
         return genres;
     }
 
-    public Optional<Genre> findGenreById(Long id) {
-        log.info("Attempting to fetch all genres");
-        Optional<Genre> genre = genreRepository.findById(id);
-        log.info("Found genre with ID {}: {}", id, genre.isPresent() ? "present" : "not present");
-        return genre;
-    }
-    @PostMapping("/findOrCreate")
-    public Genre findOrCreateByName(String name) {
-        log.info("Attempting to find or create genre with name: {}", name);
-        return genreRepository.findByName(name)
-                .orElseGet(() -> {
-                    log.info("Actor not found, creating new genre with name: {}", name);
-                    Genre newGenre = new Genre();
-                    newGenre.setName(name);
-                    return genreRepository.save(newGenre);
-                });
+    public Optional<GenreDTO> findGenreById(Long id) {
+        log.info("Attempting to find genre with ID: {}", id);
+        Optional<GenreDTO> genreDTO = genreRepository.findById(id)
+                .map(this::convertToDto);
+        log.info("Found genre with ID {}: {}", id, genreDTO.isPresent() ? "present" : "not present");
+        return genreDTO;
     }
 
-    @Transactional
     public void deleteGenre(Long id) {
         log.info("Attempting to delete genre with ID: {}", id);
         genreRepository.deleteById(id);
         log.info("Deleted genre with ID: {}", id);
+    }
+
+    private GenreDTO convertToDto(Genre genre) {
+        GenreDTO genreDTO = new GenreDTO();
+        genreDTO.setId(genre.getId());
+        genreDTO.setName(genre.getName());
+        // Map other fields as necessary
+        return genreDTO;
+    }
+
+    private Genre convertToEntity(GenreDTO genreDTO) {
+        Genre genre = new Genre();
+        genre.setId(genreDTO.getId());
+        genre.setName(genreDTO.getName());
+        // Map other fields as necessary
+        return genre;
     }
 }

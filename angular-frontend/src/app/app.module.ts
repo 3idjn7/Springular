@@ -14,6 +14,8 @@ import { ActorsComponent } from './actors/actors.component';
 import { GenresComponent } from './genres/genres.component';
 import { MovieFormComponent } from './movie-form/movie-form.component';
 import { HomeComponent } from './home/home.component';
+import { ReactiveFormsModule } from '@angular/forms';
+
 
 @NgModule({
   declarations: [
@@ -33,6 +35,7 @@ import { HomeComponent } from './home/home.component';
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
+    ReactiveFormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

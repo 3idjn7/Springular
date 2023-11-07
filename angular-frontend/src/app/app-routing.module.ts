@@ -7,6 +7,8 @@ import { ProductEditComponent } from './components/product-edit/product-edit.com
 import { MovieFormComponent } from './movie-form/movie-form.component';
 import { MoviesComponent } from './movies/movies.component';
 import { HomeComponent } from './home/home.component';
+import { ActorsComponent } from './actors/actors.component';
+import { GenresComponent } from './genres/genres.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -19,6 +21,8 @@ const routes: Routes = [
   { path: 'movie/add', component: MovieFormComponent },
   { path: 'movie/edit/:id', component: MovieFormComponent },
   { path: 'add-movie', component: MovieFormComponent },
+  { path: 'add-actor', component: ActorsComponent },
+  { path: 'add-genre', component: GenresComponent },
   
 
   { path: '**', redirectTo: '/home' }
