@@ -1,6 +1,7 @@
 package com.example.crudspringular.controller;
 
 import com.example.crudspringular.dto.GenreDTO;
+import com.example.crudspringular.entity.Genre;
 import com.example.crudspringular.service.GenreService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -39,12 +40,14 @@ public class GenreController {
     @GetMapping("/{id}")
     public ResponseEntity<GenreDTO> getGenreById(@PathVariable Long id) {
         log.info("Received request to get genre with ID: {}", id);
-        Optional<GenreDTO> genreDTO = genreService.findGenreById(id);
-        return genreDTO.map(ResponseEntity::ok)
-                .orElseGet(() -> {
-                    log.info("Genre with ID: {} not found", id);
-                    return ResponseEntity.notFound().build();
-                });
+        try {
+            Genre genre = genreService.findGenreById(id);
+            GenreDTO genreDTO = genreService.convertToDto(genre);
+            return ResponseEntity.ok(genreDTO);
+        } catch (RuntimeException e) {
+            log.info("Genre with ID: {} not found", id);
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @DeleteMapping("/{id}")

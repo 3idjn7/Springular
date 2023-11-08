@@ -3,11 +3,11 @@
 <div>
   <input type="text" [(ngModel)]="newActor" placeholder="New Actor Name">
   <button (click)="addActor()">Add Actor</button>
+  <button (click)="goBack()" class="btn-back">Back</button>
 </div>
 <ul class="actors">
   <li *ngFor="let actor of actors">
-    <a [routerLink]="['/actor', actor.id]">{{ actor.name }}</a>
-    <button class="delete" title="delete actor" (click)="delete(actor)">x</button>
+    <span>{{ actor.name }}</span>
+    <button class="delete" title="delete actor" (click)="delete(actor)">Remove</button>
   </li>
 </ul>
-<!-- You can enhance this by adding forms for adding/editing actors -->

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
 import { GenreService } from '../services/genre.service';
 import { Genre } from '../models/genre.model';
 
@@ -9,9 +10,12 @@ import { Genre } from '../models/genre.model';
 })
 export class GenresComponent implements OnInit {
   genres: Genre[] = [];
-  newGenre: string = ''; // New property for binding with the input for adding a new genre
+  newGenre: string = '';
 
-  constructor(private genreService: GenreService) { }
+  constructor(
+    private genreService: GenreService,
+    private location: Location,
+  ) { }
 
   ngOnInit() {
     console.log('GenresComponent initialized');
@@ -30,11 +34,10 @@ export class GenresComponent implements OnInit {
 
   // Method to handle deletion of a genre
   delete(genre: Genre): void {
-    console.log('Deleting genre:', genre);
-    this.genres = this.genres.filter(g => g !== genre);
-    this.genreService.deleteGenre(genre.id).subscribe(() => {
-      console.log(`Genre with id ${genre.id} deleted`);
-    });
+    if (confirm(`Are you sure you want to delete ${genre.name}?`)) {
+      this.genres = this.genres.filter(g => g !== genre);
+      this.genreService.deleteGenre(genre.id).subscribe();
+    }
   }
 
   // Method to handle adding a new genre
@@ -49,5 +52,9 @@ export class GenresComponent implements OnInit {
     } else {
       console.log('New genre input is empty. No genre added.');
     }
+  }
+  // Method for the button to go back
+  goBack(): void {
+    this.location.back();
   }
 }

@@ -3,15 +3,15 @@ package com.example.crudspringular.service;
 import com.example.crudspringular.dto.ActorDTO;
 import com.example.crudspringular.dto.GenreDTO;
 import com.example.crudspringular.dto.MovieDTO;
+import com.example.crudspringular.entity.Actor;
+import com.example.crudspringular.entity.Genre;
 import com.example.crudspringular.entity.Movie;
 import com.example.crudspringular.repository.MovieRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -66,22 +66,29 @@ public class MovieService {
         movieDTO.setTitle(movie.getTitle());
         movieDTO.setReleaseYear(movie.getReleaseYear());
 
+        List<GenreDTO> genreDTOs = movie.getGenres().stream()
+                .map(genre -> {
+                    GenreDTO genreDTO = new GenreDTO();
+                    genreDTO.setId(genre.getId());
+                    genreDTO.setName(genre.getName());
+                    return genreDTO;
+                })
+                .collect(Collectors.toList());
+        movieDTO.setGenres(genreDTOs);
 
-        Set<GenreDTO> genreDTOs = movie.getGenres().stream()
-                .map(genreService::convertToDto)
-                .collect(Collectors.toSet());
-        movieDTO.setGenres(genreDTOs); // Now this should work since MovieDTO expects a Set<GenreDTO>
-
-        // Since actors is already a Set<ActorDTO>, we keep it as is
-        Set<ActorDTO> actorDTOs = movie.getActors().stream()
-                .map(actorService::convertToDto)
-                .collect(Collectors.toSet());
+        List<ActorDTO> actorDTOs = movie.getActors().stream()
+                .map(actor -> {
+                    ActorDTO actorDTO = new ActorDTO();
+                    actorDTO.setId(actor.getId());
+                    actorDTO.setName(actor.getName());
+                    return actorDTO;
+                })
+                .collect(Collectors.toList());
         movieDTO.setActors(actorDTOs);
-
-        // ... map other fields as necessary
 
         return movieDTO;
     }
+
 
     private Movie convertToEntity(MovieDTO movieDTO) {
         Movie movie = new Movie();
@@ -89,8 +96,20 @@ public class MovieService {
         movie.setTitle(movieDTO.getTitle());
         movie.setReleaseYear(movieDTO.getReleaseYear());
 
+        if (movieDTO.getGenres() != null) {
+            List<Genre> genres = movieDTO.getGenres().stream()
+                    .map(genreDTO -> genreService.findGenreById(genreDTO.getId()))
+                    .collect(Collectors.toList());
+            movie.setGenres(genres);
+        }
 
-        // Map other fields as necessary
+        if (movieDTO.getActors() != null) {
+            List<Actor> actors = movieDTO.getActors().stream()
+                    .map(actorDTO -> actorService.findActorById(actorDTO.getId()))
+                    .collect(Collectors.toList());
+            movie.setActors(actors);
+        }
+
         return movie;
     }
 }

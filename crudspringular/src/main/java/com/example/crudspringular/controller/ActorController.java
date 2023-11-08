@@ -1,6 +1,7 @@
 package com.example.crudspringular.controller;
 
 import com.example.crudspringular.dto.ActorDTO;
+import com.example.crudspringular.entity.Actor;
 import com.example.crudspringular.service.ActorService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -39,12 +40,14 @@ public class ActorController {
     @GetMapping("/{id}")
     public ResponseEntity<ActorDTO> getActorById(@PathVariable Long id) {
         log.info("Received request to get actor with ID: {}", id);
-        Optional<ActorDTO> actorDTO = actorService.findActorById(id);
-        return actorDTO.map(ResponseEntity::ok)
-                .orElseGet(() -> {
-                    log.info("Actor with ID: {} not found", id);
-                    return ResponseEntity.notFound().build();
-                });
+        try {
+            Actor actor = actorService.findActorById(id);
+            ActorDTO actorDTO = actorService.convertToDto(actor);
+            return ResponseEntity.ok(actorDTO);
+        } catch (RuntimeException e) {
+            log.info("Actor with ID: {} not found", id);
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @DeleteMapping("/{id}")

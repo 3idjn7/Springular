@@ -1,0 +1,92 @@
+/* Shared styles for both actors and genres components */
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+input[type="text"] {
+  padding: 10px;
+  margin-bottom: 10px;
+  margin-right: 5px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  width: calc(85% - 110px);
+  /* Adjust width to leave space for the button */
+}
+
+button {
+  padding: 10px 16px;
+  margin-right: 5px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #009879;
+  color: white;
+  transition: background-color 0.2s ease;
+}
+
+button.btn-back {
+  padding: 10px 34px;
+  border: none;
+  border-radius: 5px;
+  background-color: #4c5358;
+  /* Bootstrap secondary button color for 'back' buttons */
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+button:hover {
+  background-color: darken(#009879, 10%);
+  transform: scale(1.1);
+}
+
+button.btn-back:hover {
+  background-color: #151617;
+  /* A darker shade for hover state */
+}
+
+ul.actors,
+ul.genres {
+  list-style-type: none;
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+ul.actors li,
+ul.genres li {
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  padding: 8px 16px;
+  margin-bottom: 5px;
+  margin-right: 10px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+
+.delete {
+  background-color: #d9534f;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  margin-left: 5px;
+  cursor: pointer;
+}
+
+.delete:hover {
+  background-color: darken(#d9534f, 10%);
+}
+
+/* For responsive design */
+@media (max-width: 400px) {
+  input[type="text"] {
+    width: calc(100% - 800px);
+    /* Adjust the width for smaller screens */
+  }
+}

@@ -3,11 +3,12 @@
 <div>
   <input type="text" [(ngModel)]="newGenre" placeholder="New Genre Name">
   <button (click)="addGenre()">Add Genre</button>
+  <button (click)="goBack()" class="btn-back">Back</button>
 </div>
 <ul class="genres">
   <li *ngFor="let genre of genres">
-    <a [routerLink]="['/genre', genre.id]">{{ genre.name }}</a>
-    <button class="delete" title="delete genre" (click)="delete(genre)">x</button>
+    <span>{{ genre.name }}</span>
+    <button class="delete" title="delete genre" (click)="delete(genre)">Remove</button>
   </li>
 </ul>
 <!-- You can enhance this by adding forms for adding/editing genres -->

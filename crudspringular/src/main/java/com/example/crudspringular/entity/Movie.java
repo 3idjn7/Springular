@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -26,7 +28,8 @@ public class Movie {
             joinColumns = @JoinColumn(name = "movie_id"),
             inverseJoinColumns = @JoinColumn(name = "genre_id")
     )
-    private Set<Genre> genres = new HashSet<>();
+    @JsonManagedReference
+    private List<Genre> genres = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -35,5 +38,5 @@ public class Movie {
             inverseJoinColumns = @JoinColumn(name = "actor_id")
     )
     @JsonManagedReference
-    private Set<Actor> actors = new HashSet<>();
+    private List<Actor> actors = new ArrayList<>();
 }

@@ -2,13 +2,13 @@ package com.example.crudspringular.dto;
 
 import lombok.Data;
 
-import java.util.Set;
+import java.util.List;
 
 @Data
 public class MovieDTO {
     private Long id;
     private String title;
     private Integer releaseYear;
-    private Set<GenreDTO> genres;
-    private Set<ActorDTO> actors;
+    private List<GenreDTO> genres;
+    private List<ActorDTO> actors;
 }

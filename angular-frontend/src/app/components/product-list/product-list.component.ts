@@ -36,12 +36,12 @@ export class ProductListComponent implements OnInit {
 
   createProduct(): void {
     console.log('Navigating to product creation page');
-    this.router.navigate(['/create']);
+    this.router.navigate(['/product/add']);
   }
 
   editProduct(id: number): void {
     console.log('Navigating to edit page for product with id:', id);
-    this.router.navigate(['/edit', id]);
+    this.router.navigate(['/product/edit', id]);
   }
 
   deleteProduct(id: number): void {

@@ -37,12 +37,9 @@ public class ActorService {
         return actors;
     }
 
-    public Optional<ActorDTO> findActorById(Long id) {
-        log.info("Attempting to find actor with ID: {}", id);
-        Optional<ActorDTO> actorDTO = actorRepository.findById(id)
-                .map(this::convertToDto);
-        log.info("Found actor with ID {}: {}", id, actorDTO.isPresent() ? "present" : "not present");
-        return actorDTO;
+    public Actor findActorById(Long id) {
+        return actorRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Actor not found"));
     }
 
     public void deleteActor(Long id) {
@@ -55,7 +52,6 @@ public class ActorService {
         ActorDTO actorDTO = new ActorDTO();
         actorDTO.setId(actor.getId());
         actorDTO.setName(actor.getName());
-        // Map other fields as necessary
         return actorDTO;
     }
 

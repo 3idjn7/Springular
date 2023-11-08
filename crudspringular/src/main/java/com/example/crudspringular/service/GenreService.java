@@ -37,12 +37,9 @@ public class GenreService {
         return genres;
     }
 
-    public Optional<GenreDTO> findGenreById(Long id) {
-        log.info("Attempting to find genre with ID: {}", id);
-        Optional<GenreDTO> genreDTO = genreRepository.findById(id)
-                .map(this::convertToDto);
-        log.info("Found genre with ID {}: {}", id, genreDTO.isPresent() ? "present" : "not present");
-        return genreDTO;
+    public Genre findGenreById(Long id) {
+        return genreRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Genre not found"));
     }
 
     public void deleteGenre(Long id) {

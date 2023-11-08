@@ -45,14 +45,10 @@ export class MoviesComponent implements OnInit {
                         : 'No actors',
             releaseYear: movie.releaseYear || 'Unknown',
           };
-
-          // Log the processed movie object
           console.log('Processed movie:', processedMovie);
 
           return processedMovie;
         });
-
-        // Log the fully processed movies array
         console.log('Movies with genres processed:', processedMovies);
 
         this.movies = processedMovies;

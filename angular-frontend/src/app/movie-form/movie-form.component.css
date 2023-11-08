@@ -1,24 +1,132 @@
 /* movie-form.component.css */
-.movie-form {
-  /* Your styles here */
+
+/* Center the header text */
+h2 {
+  text-align: center;
+  /* This centers the text within the h2 element */
+  margin-top: 0;
+  /* You can adjust this value to add space above the header */
+  margin-bottom: 20px;
+  /* You can adjust this value to add space below the header */
 }
 
-.movie-form form {
-  /* Style your form here */
+button:not(:last-child) {
+  margin-right: 8px;
 }
 
-.movie-form form div {
+/* Container to center the form and give some padding */
+.container {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Style for form group */
+.form-group {
+  margin-bottom: 15px;
+}
+
+/* Style for labels */
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+/* Unified style for text inputs and select elements */
+.form-control {
+  width: 100%;
+  padding: 10px;
   margin-bottom: 10px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  font-size: 16px;
 }
 
-.movie-form form label {
-  /* Style your labels here */
+/* Hover effect for inputs */
+.form-control:hover {
+  border-color: #009879;
 }
 
-.movie-form form input {
-  /* Style your input fields here */
+/* Focus effect to match the update button color */
+.form-control:focus {
+  border-color: #009879;
+  box-shadow: 0 0 5px rgba(0, 152, 121, 0.5);
 }
 
-.movie-form button {
-  /* Style your buttons here */
+/* Button styles */
+button.btn {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  background-color: #5cb85c;
+  /* Primary button color */
+  margin-top: 10px;
+  /* Spacing from the last form element */
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+/* Hover effect for buttons to match the movies.component style */
+button.btn:hover {
+  background-color: #009879;
+  /* Darker green for hover */
+  transform: scale(1.05);
+  /* Slight increase in size */
+}
+
+/* movie-form.component.css */
+
+/* Container for buttons to lay them out horizontally */
+.form-buttons {
+  display: flex;
+  justify-content: space-between;
+  /* Adjust as needed */
+  margin-top: 20px;
+}
+
+/* Styles for the primary (Create/Update) button */
+.btn-primary {
+  background-color: #009879;
+  /* Updated button color */
+  /* ... other styles ... */
+}
+
+/* Hover effect for the primary button */
+.btn-primary:hover {
+  background-color: darken(#009879, 10%);
+  /* Darken function for hover state */
+}
+
+/* Styles for the back button */
+.btn-back {
+  background-color: #4c5358;
+  /* Match the primary button color */
+  /* ... other styles like padding, font-size etc., similar to .btn-primary ... */
+}
+
+/* Hover effect for the back button */
+.btn-back:hover {
+  background-color: darken(#4c5358);
+  /* Darken function for hover state */
+}
+
+/* Ensure you have a transition for smooth color change */
+button.btn {
+  transition: background-color 0.3s ease;
+}
+
+/* Responsive design adjustments */
+@media (max-width: 600px) {
+  .container {
+    width: 100%;
+    padding: 20px;
+    margin: 10px auto;
+  }
 }

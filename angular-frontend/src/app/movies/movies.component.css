@@ -1,0 +1,74 @@
+
+/* movies.component.css */
+
+button:not(:last-child) {
+  margin-right: 5px;
+}
+
+/* General button style adjustments */
+button {
+  padding: 10px 16px;
+  /* Increase padding to make the button larger */
+  font-size: 16px;
+  /* Adjust font-size for larger text within the button */
+  border: none;
+  /* Optional: removes the border */
+  border-radius: 5px;
+  /* Optional: rounds the corners of the button */
+}
+
+/* You can also target the specific buttons for update and delete if needed */
+button.update {
+  background-color: #009879;
+  color: white;
+}
+
+button.delete {
+  background-color: #d9534f;
+}
+
+/* Base button style */
+button {
+  transition: transform 0.2s ease;
+  /* Animate the transform property */
+}
+
+/* Hover effect */
+button:hover {
+  transform: scale(1.1);
+  /* Scale up the button to 110% of its original size */
+}
+
+button.addMovie {
+  background-color: #009879;
+}
+
+button.actors {
+  background-color: #009879;
+}
+
+button.genres {
+  background-color: #009879;
+}
+
+td.title {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+td.genreNames {
+  font-weight: bold;
+  font-size: 16px;
+
+}
+
+td.actorNames {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+td.releaseYear {
+  font-weight: bold;
+  font-size: 16px;
+}
+
