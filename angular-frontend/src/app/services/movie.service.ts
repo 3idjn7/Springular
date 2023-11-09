@@ -13,11 +13,15 @@ export class MovieService {
     private http: HttpClient,
   ) { }
 
-  getMovies(): Observable<any> {
-  return this.http.get(`${this.baseUrl}`).pipe(
-    tap(data => console.log('Data from getMovies:', data))
-  );
-}
+  getMovies(page: number = 0, size: number = 5): Observable<any> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+
+    return this.http.get<any>(`${this.baseUrl}`, { params }).pipe(
+      tap(data => console.log('Data from getMovies:', data))
+    );
+  }
 
   getMovie(id: number): Observable<any> {
     return this.http.get(`${this.baseUrl}/${id}`);
@@ -43,6 +47,7 @@ export class MovieService {
   return this.http.get<any>(`${this.baseUrl}/search`, { params })
     .pipe(
       tap(data => {
+        console.log('Data from searchMovies:', data);
         const movies = data.content.map((movie: any) => ({
           ...movie,
           genreNames: movie.genres.map((g: any) => g.name).join(', '),

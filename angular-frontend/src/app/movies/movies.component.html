@@ -15,33 +15,28 @@
       <th>Release Year</th>
       <th>Genres</th>
       <th>Actors</th>
-      <th>Director</th>
       <th>Actions</th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let movie of movies">
-        <td class="title">{{ movie.title }}</td>
-        <td class="releaseYear">{{ movie.releaseYear }}</td>
-        <td class="genreNames">{{ movie.genreNames }}</td>
-        <td class="actorNames">{{ movie.actorNames }}</td>
-        <td class="directorName">{{ movie.directorName }}</td>
+      <td class="title">{{ movie.title }}</td>
+      <td class="releaseYear">{{ movie.releaseYear }}</td>
+      <td class="genreNames">{{ movie.genreNames }}</td>
+      <td class="actorNames">{{ movie.actorNames }}</td>
       <td class="actions">
         <button (click)="updateMovie(movie.id)" class="update">Update</button>
-        <button (click)="deleteMovie(movie.id)" class="delete">Delete</button>
+        <button (click)="deleteMovie(movie.id, movie.title)" class="delete">Delete</button>
       </td>
     </tr>
   </tbody>
-  <div class="pagination-controls">
-    <button (click)="onPageChange(currentPage - 1)" [disabled]="currentPage === 0">Previous</button>
-  
-    <!-- Dynamically generate page number buttons -->
-    <ng-container *ngFor="let page of getPages(totalItems, pageSize); let i = index">
-      <div class="page-number" [class.active]="i === currentPage">
-        <button (click)="onPageChange(i)">{{ i + 1 }}</button>
-      </div>
-    </ng-container>
-  
-    <button (click)="onPageChange(currentPage + 1)" [disabled]="currentPage >= (totalItems / pageSize) - 1">Next</button>
-  </div>
 </table>
+<div class="pagination-controls">
+  <button (click)="onPageChange(currentPage - 1)" [disabled]="currentPage === 0">Previous</button>
+  <ng-container *ngFor="let page of getPages(totalItems, pageSize); let i = index">
+    <div class="page-number" [class.active]="i === currentPage">
+      <button (click)="onPageChange(i)">{{ i + 1 }}</button>
+    </div>
+  </ng-container>
+  <button (click)="onPageChange(currentPage + 1)" [disabled]="currentPage >= (totalItems / pageSize) - 1">Next</button>
+</div>

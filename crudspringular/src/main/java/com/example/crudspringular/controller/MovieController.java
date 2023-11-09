@@ -4,6 +4,7 @@ import com.example.crudspringular.dto.MovieDTO;
 import com.example.crudspringular.service.MovieService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,10 +39,12 @@ public class MovieController {
     }
 
     @GetMapping
-    public ResponseEntity<List<MovieDTO>> getAllMovies() {
-        log.info("Received request to list all movies");
-        List<MovieDTO> movieDTOs = movieService.findAllMovies();
-        log.info("Returning {} movies", movieDTOs.size());
+    public ResponseEntity<Page<MovieDTO>> getAllMovies(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<MovieDTO> movieDTOs = movieService.findAllMovies(pageRequest);
+        log.info("Returning {} movies", movieDTOs.getTotalElements());
         return ResponseEntity.ok(movieDTOs);
     }
 
@@ -58,7 +61,7 @@ public class MovieController {
 
     @GetMapping("/search")
     public ResponseEntity<Page<MovieDTO>> searchMovies(
-            @RequestParam String query,
+            @RequestParam(value = "query") String query, // Changed to match the frontend
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
         return ResponseEntity.ok(movieService.searchMovies(query, page, size));

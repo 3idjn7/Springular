@@ -27,49 +27,54 @@ export class MoviesComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-      this.route.queryParams.pipe(takeUntil(this.unsubscribe$)).subscribe(params => {
-        this.currentPage = params['page'] ? parseInt(params['page'], 10) : 0;
-        this.searchMovies(this.currentPage);
-      });
-  }
+  this.route.queryParams.pipe(takeUntil(this.unsubscribe$)).subscribe(params => {
+    this.currentPage = params['page'] ? parseInt(params['page'], 10) : 0;
+    this.searchTerm = params['searchTerm'] || '';
+
+    if (this.searchTerm) {
+      this.searchMovies(this.currentPage);
+    } else {
+      this.reloadData(this.currentPage);
+    }
+  });
+}
 
   ngOnDestroy() {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }
 
-  reloadData() {
-    console.log('Reloading movie data...');
-    this.movieService.getMovies().subscribe(data => {
-        // Log raw movie data
-      console.log('Data from getMovies:', data);
-
-          const processedMovies = data.map((movie: any) => {
-          // Log the raw genre and actors to see their structure for each movie
-          console.log('Processing movie:', movie);
-          console.log('Raw genre:', movie.genre);
-          console.log('Raw actors:', movie.actors);
-          const genreNames = movie.genres && movie.genres.length > 0
-              ? movie.genres.map((g: { name: any; }) => g.name).join(', ')
-              : 'N/A';
-
-          const processedMovie = {
+  reloadData(page: number = this.currentPage, size: number = this.pageSize): void {
+  this.movieService.getMovies(page, size).subscribe({
+    next: (data) => {
+      // Here we're assuming 'data' has 'content' and 'totalElements' properties.
+      // 'content' would be the array of movies, and 'totalElements' would be the total count.
+      if (data.content && data.totalElements !== undefined) {
+        const processedMovies = data.content.map((movie: any) => {
+          // Process each movie object here as needed
+          return {
             ...movie,
-            genreNames: genreNames,
-            actorNames: movie.actors && movie.actors.length > 0
-                        ? movie.actors.map((actor: any) => actor.name).join(', ')
-                        : 'No actors',
+            genreNames: movie.genres?.map((g: any) => g.name).join(', ') || 'N/A',
+            actorNames: movie.actors?.map((actor: any) => actor.name).join(', ') || 'No actors',
             releaseYear: movie.releaseYear || 'Unknown',
           };
-          console.log('Processed movie:', processedMovie);
-
-          return processedMovie;
         });
-        console.log('Movies with genres processed:', processedMovies);
 
+        // Update the component's movies and pagination-related properties
         this.movies = processedMovies;
-      }, error => console.log('Error fetching movies:', error));
-  }
+        this.totalItems = data.totalElements;
+      } else {
+        // If the expected properties aren't present, log an error or handle as needed.
+        console.error('Unexpected response structure:', data);
+      }
+    },
+    error: (error) => {
+      // Handle any errors that occur during the API call.
+      console.error('Error fetching movies:', error);
+    }
+  });
+}
+
 
 
 
@@ -85,14 +90,19 @@ export class MoviesComponent implements OnInit {
     this.router.navigate(['/add-genre']); 
   }
 
-  deleteMovie(id: number) {
-    this.movieService.deleteMovie(id)
-      .subscribe(
-        data => {
-          console.log(data);
+  // Method to handle deletion of a movie
+  deleteMovie(id: number, movieTitle: string): void {
+    if (confirm(`Are you sure you want to delete "${movieTitle}"?`)) {
+      this.movieService.deleteMovie(id).subscribe({
+        next: (data) => {
+          console.log('Movie deleted:', data);
           this.reloadData();
         },
-        error => console.log(error));
+        error: (error) => {
+          console.error('Error deleting movie:', error);
+        }
+      });
+    }
   }
 
   updateMovie(id: number) {
@@ -100,35 +110,46 @@ export class MoviesComponent implements OnInit {
   }
 
   searchMovies(page: number = this.currentPage): void {
-  this.movieService.searchMovies(this.searchTerm, page, this.pageSize).subscribe(data => {
-    const processedMovies = data['content'].map((movie: any) => {
-      const genreNames = movie.genres && movie.genres.length > 0
-        ? movie.genres.map((g: { name: any; }) => g.name).join(', ')
-        : 'N/A';
-      const actorNames = movie.actors && movie.actors.length > 0
-        ? movie.actors.map((actor: any) => actor.name).join(', ')
-        : 'No actors';
-      return {
-        ...movie,
-        genreNames: genreNames,
-        actorNames: actorNames,
-      };
-    });
+    if (!this.searchTerm.trim()) {
+      // If the search term is empty or only whitespace, reload the initial movie data
+      this.reloadData(page);
+    } else {
+      // Otherwise, proceed with the search
+      this.movieService.searchMovies(this.searchTerm, page, this.pageSize).subscribe(data => {
+        const processedMovies = data['content'].map((movie: any) => {
+          const genreNames = movie.genres && movie.genres.length > 0
+            ? movie.genres.map((g: { name: any; }) => g.name).join(', ')
+            : 'N/A';
+          const actorNames = movie.actors && movie.actors.length > 0
+            ? movie.actors.map((actor: any) => actor.name).join(', ')
+            : 'No actors';
+          return {
+            ...movie,
+            genreNames: genreNames,
+            actorNames: actorNames,
+          };
+        });
 
-    this.movies = processedMovies;
-    this.totalItems = data['totalElements']; // This should be the total number of items for pagination
-    this.currentPage = page;
-    }, error => console.log('Error searching for movies:', error));
+        this.movies = processedMovies;
+        this.totalItems = data['totalElements']; // This should be the total number of items for pagination
+        this.currentPage = page;
+      }, error => console.log('Error searching for movies:', error));
+    }
   }
 
+
     getPages(totalItems: number, pageSize: number): number[] {
-  const totalPages = Math.ceil(totalItems / pageSize);
-  return Array.from({ length: totalPages }, (_, index) => index);
-}
+      const totalPages = Math.ceil(totalItems / pageSize);
+      return Array.from({ length: totalPages }, (_, index) => index);
+    }
 
 
   onPageChange(page: number): void {
     this.currentPage = page;
-    this.searchMovies(page);
+    if (this.searchTerm) {
+      this.searchMovies(page);
+    } else {
+      this.reloadData(page);
+    }
   }
 }

@@ -4,53 +4,39 @@ h2 {
   margin-bottom: 20px;
 }
 
-input[type="text"] {
+.actor-controls,
+.genre-controls {
+  display: flex;
+  justify-content: space-between;
+  /* Aligns items to the start and end of the container */
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 0 20px;
+  /* Adds padding to the left and right */
+}
+
+.actor-controls input[type="text"],
+.genre-controls input[type="text"] {
+  flex-grow: 1;
+  /* Allows input to grow and fill available space */
+  margin-right: 10px;
+  /* Adds space between the input and the button */
   padding: 10px;
   margin-bottom: 10px;
   margin-right: 5px;
   border: 1px solid #ddd;
   border-radius: 5px;
   width: calc(85% - 110px);
-  /* Adjust width to leave space for the button */
 }
 
-button {
-  padding: 10px 16px;
-  margin-right: 5px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  background-color: #009879;
-  color: white;
-  transition: background-color 0.2s ease;
-}
-
-button.btn-back {
-  padding: 10px 34px;
-  border: none;
-  border-radius: 5px;
-  background-color: #4c5358;
-  /* Bootstrap secondary button color for 'back' buttons */
-  color: white;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-button:hover {
-  background-color: darken(#009879, 10%);
-  transform: scale(1.1);
-}
-
-button.btn-back:hover {
-  background-color: #151617;
-  /* A darker shade for hover state */
-}
-
+/* List styles */
 ul.actors,
 ul.genres {
   list-style-type: none;
-  padding-left: 0px;
-  padding-right: 0px;
+  padding: 0;
+  /* Removes default padding */
+  margin: 0 20px;
+  /* Adds margin to the left and right */
 }
 
 ul.actors li,
@@ -68,25 +54,55 @@ ul.genres li {
   font-size: 16px;
 }
 
-
-.delete {
-  background-color: #d9534f;
-  color: white;
+/* Button styles */
+button {
+  padding: 10px 16px;
+  margin-right: 8px;
   border: none;
-  padding: 5px 10px;
   border-radius: 5px;
-  margin-left: 5px;
   cursor: pointer;
+  background-color: #009879;
+  color: white;
+  transition: background-color 0.2s ease;
 }
 
-.delete:hover {
-  background-color: darken(#d9534f, 10%);
+button.delete {
+  background-color: #d9534f;
 }
 
-/* For responsive design */
+button.btn-back {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 5px;
+  background-color: #4c5358;
+  /* Bootstrap secondary button color for 'back' buttons */
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+/* Responsive adjustments */
 @media (max-width: 400px) {
-  input[type="text"] {
-    width: calc(100% - 800px);
-    /* Adjust the width for smaller screens */
+
+  .actor-controls,
+  .genre-controls {
+    flex-direction: column;
+    /* Stacks items vertically on small screens */
+    padding: 0 10px;
+    /* Adjusts padding for smaller screens */
+  }
+
+  .actor-controls input[type="text"],
+  .genre-controls input[type="text"] {
+    width: 100%;
+    /* Full width on small screens */
+    margin-bottom: 10px;
+    /* Adds space below the input */
+  }
+
+  ul.actors,
+  ul.genres {
+    margin: 0 10px;
+    /* Adjusts margin for smaller screens */
   }
 }

@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -61,20 +62,17 @@ public class MovieService {
         return convertToDto(updatedMovie);
     }
 
-    public Page<MovieDTO> searchMovies(String title, int page, int size) {
+    public Page<MovieDTO> searchMovies(String searchTerm, int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        return movieRepository.findByTitleContainingIgnoreCase(title, pageRequest)
+        return movieRepository.findByTitleContainingIgnoreCaseOrActorNameContainingIgnoreCase(searchTerm, pageRequest)
                 .map(this::convertToDto);
     }
 
 
-    public List<MovieDTO> findAllMovies() {
+    public Page<MovieDTO> findAllMovies(Pageable pageable) {
         log.info("Attempting to fetch all movies");
-        List<MovieDTO> movies = movieRepository.findAll().stream()
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
-        log.info("Fetched {} movies", movies.size());
-        return movies;
+        return movieRepository.findAll(pageable)
+                .map(this::convertToDto);
     }
 
     public Optional<MovieDTO> findMovieById(Long id) {

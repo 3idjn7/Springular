@@ -4,25 +4,70 @@ h2 {
   margin-bottom: 20px;
 }
 
-input[type="text"] {
+.actor-controls,
+.genre-controls {
+  display: flex;
+  justify-content: space-between;
+  /* Aligns items to the start and end of the container */
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 0 20px;
+  /* Adds padding to the left and right */
+}
+
+.actor-controls input[type="text"],
+.genre-controls input[type="text"] {
+  flex-grow: 1;
+  /* Allows input to grow and fill available space */
+  margin-right: 10px;
+  /* Adds space between the input and the button */
   padding: 10px;
   margin-bottom: 10px;
-  margin-right: 10px;
+  margin-right: 5px;
   border: 1px solid #ddd;
   border-radius: 5px;
   width: calc(85% - 110px);
-  /* Adjust width to leave space for the button */
 }
 
+/* List styles */
+ul.actors,
+ul.genres {
+  list-style-type: none;
+  padding: 0;
+  /* Removes default padding */
+  margin: 0 20px;
+  /* Adds margin to the left and right */
+}
+
+ul.actors li,
+ul.genres li {
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  padding: 8px 16px;
+  margin-bottom: 5px;
+  margin-right: 10px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+/* Button styles */
 button {
   padding: 10px 16px;
-  margin-right: 5px;
+  margin-right: 8px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   background-color: #009879;
   color: white;
   transition: background-color 0.2s ease;
+}
+
+button.delete {
+  background-color: #d9534f;
 }
 
 button.btn-back {
@@ -36,76 +81,28 @@ button.btn-back {
   transition: background-color 0.2s ease;
 }
 
-button:hover {
-  background-color: darken(#009879, 10%);
-  transform: scale(1.1);
-}
-
-button.btn-back:hover {
-  background-color: #151617;
-  /* A darker shade for hover state */
-}
-
-ul.actors,
-ul.genres {
-  padding-left: 0px;
-  padding-right: 0px;
-}
-
-ul.actors li span {
-  font-weight: bold;
-  /* Makes text bold */
-  font-size: 16px;
-  /* Increases the font size */
-  display: inline-block;
-  /* Allows you to set a width or padding if needed */
-  margin-right: 10px;
-  /* Optional: Adds some space between the name and the delete button */
-}
-
-.actor-controls input[type="text"] {
-  flex-grow: 1;
-  margin-right: 10px;
-  font-weight: bold;
-}
-
-.actor-controls {
-  display: flex;
-  justify-content: start;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-ul.actors li,
-ul.genres li {
-  background: #f9f9f9;
-  border: 1px solid #ddd;
-  padding: 8px 16px;
-  margin-bottom: 5px;
-  border-radius: 5px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-
-.delete {
-  background-color: #d9534f;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.delete:hover {
-  background-color: #c9302c;
-}
-
-/* For responsive design */
+/* Responsive adjustments */
 @media (max-width: 400px) {
-  input[type="text"] {
-    width: calc(100% - 800px);
-    /* Adjust the width for smaller screens */
+
+  .actor-controls,
+  .genre-controls {
+    flex-direction: column;
+    /* Stacks items vertically on small screens */
+    padding: 0 10px;
+    /* Adjusts padding for smaller screens */
+  }
+
+  .actor-controls input[type="text"],
+  .genre-controls input[type="text"] {
+    width: 100%;
+    /* Full width on small screens */
+    margin-bottom: 10px;
+    /* Adds space below the input */
+  }
+
+  ul.actors,
+  ul.genres {
+    margin: 0 10px;
+    /* Adjusts margin for smaller screens */
   }
 }

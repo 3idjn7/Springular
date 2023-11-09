@@ -62,19 +62,31 @@ button:hover {
 
 .search-bar {
   margin-left: auto;
+  /* This will push the search bar to the right */
   display: flex;
   align-items: center;
+}
+
+.search-bar>button {
+  margin-left: 10px;
+  /* Adjust the space between the input and button */
+  /* Add other styles as needed */
+}
+
+/* Style adjustments for input within the search-bar */
+.search-bar>input[type="text"] {
+  margin-left: 10px;
+  /* Adjust the space between the input and button */
+  /* Add other styles as needed */
 }
 
 /* Pagination controls */
 .pagination-controls {
   display: flex;
-  justify-content: center;
+  justify-content: center; /* This will center the child elements */
   align-items: center;
   margin-top: 20px;
-  flex-wrap: wrap;
-  gap: 5px;
-  /* Allows for wrapping on smaller screens */
+  /* Remove flex-wrap: nowrap; if you want to allow wrapping on smaller screens */
 }
 
 .page-number button {
@@ -130,9 +142,7 @@ td.releaseYear {
       align-items: stretch;
     }
 
-  .search-bar {
-    margin-top: 10px;
-  }
+  
 
   .pagination-controls {
     flex-direction: row;
@@ -148,15 +158,4 @@ td.releaseYear {
      margin: 0 5px;
      /* Add some space between buttons */
   }
-
-        .search-bar input[type="text"] {
-          width: calc(100% - 100px);
-          /* Adjust width to leave space for button */
-        }
-
-        .search-bar button {
-          white-space: nowrap;
-          margin-left: 10px;
-          /* Prevent text wrapping inside button */
-        }
 }
