@@ -4,6 +4,7 @@ import com.example.crudspringular.dto.ActorDTO;
 import com.example.crudspringular.entity.Actor;
 import com.example.crudspringular.service.ActorService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -48,6 +49,14 @@ public class ActorController {
             log.info("Actor with ID: {} not found", id);
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<ActorDTO>> searchActors(
+            @RequestParam String query,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(actorService.searchActors(query, page, size));
     }
 
     @DeleteMapping("/{id}")

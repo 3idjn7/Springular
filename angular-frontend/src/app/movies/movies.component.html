@@ -1,9 +1,13 @@
 <h2>Movies List</h2>
-<td class="options">
+<div class="header-controls">
   <button (click)="addMovie()" class="addMovie">Add Movie</button>
   <button (click)="addActor()" class="actors">Actors</button>
   <button (click)="addGenre()" class="genres">Genres</button>
-</td>
+  <div class="search-bar">
+    <input type="text" [(ngModel)]="searchTerm" placeholder="Search movies and actors..." />
+    <button (click)="searchMovies()">Search</button>
+  </div>
+</div>
 <table class="table table-striped">
   <thead>
     <tr>
@@ -28,4 +32,16 @@
       </td>
     </tr>
   </tbody>
+  <div class="pagination-controls">
+    <button (click)="onPageChange(currentPage - 1)" [disabled]="currentPage === 0">Previous</button>
+  
+    <!-- Dynamically generate page number buttons -->
+    <ng-container *ngFor="let page of getPages(totalItems, pageSize); let i = index">
+      <div class="page-number" [class.active]="i === currentPage">
+        <button (click)="onPageChange(i)">{{ i + 1 }}</button>
+      </div>
+    </ng-container>
+  
+    <button (click)="onPageChange(currentPage + 1)" [disabled]="currentPage >= (totalItems / pageSize) - 1">Next</button>
+  </div>
 </table>

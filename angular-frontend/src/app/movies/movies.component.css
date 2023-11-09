@@ -1,74 +1,162 @@
-
 /* movies.component.css */
 
-button:not(:last-child) {
-  margin-right: 5px;
-}
-
-/* General button style adjustments */
+/* Style adjustments for all buttons */
 button {
   padding: 10px 16px;
-  /* Increase padding to make the button larger */
   font-size: 16px;
-  /* Adjust font-size for larger text within the button */
   border: none;
-  /* Optional: removes the border */
   border-radius: 5px;
-  /* Optional: rounds the corners of the button */
-}
-
-/* You can also target the specific buttons for update and delete if needed */
-button.update {
   background-color: #009879;
+  /* Standardized button color */
   color: white;
+  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  margin-right: 5px;
 }
 
 button.delete {
   background-color: #d9534f;
+  /* Red color for Delete buttons */
 }
 
-/* Base button style */
-button {
-  transition: transform 0.2s ease;
-  /* Animate the transform property */
-}
-
-/* Hover effect */
 button:hover {
   transform: scale(1.1);
-  /* Scale up the button to 110% of its original size */
+  opacity: 0.8;
 }
 
-button.addMovie {
+/* Base styles for the table and its elements */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 5px 5px 0 0;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+.table th,
+.table td {
+  padding: 12px 15px;
+  text-align: left;
+}
+
+.table thead tr {
   background-color: #009879;
+  color: #ffffff;
 }
 
-button.actors {
+.table tbody tr:nth-of-type(even) {
+  background-color: #f3f3f3;
+}
+
+.table tbody tr {
+  border-bottom: 1px solid #dddddd;
+}
+
+/* Header controls */
+.header-controls {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.search-bar {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+}
+
+/* Pagination controls */
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  flex-wrap: wrap;
+  gap: 5px;
+  /* Allows for wrapping on smaller screens */
+}
+
+.page-number button {
+  background-color: #f0f0f0;
+  /* Light grey background */
+  color: #333;
+  /* Dark text color for contrast */
+  padding: 10px 10px;
+  /* Smaller padding for page number buttons */
+  border: 1px solid #ddd;
+  /* Border to distinguish page numbers */
+  border-radius: 4px;
+  /* Slightly rounded corners */
+}
+
+.page-number.active button {
   background-color: #009879;
-}
-
-button.genres {
-  background-color: #009879;
-}
-
-td.title {
+  /* Highlight the current page */
+  color: white;
   font-weight: bold;
-  font-size: 16px;
 }
 
-td.genreNames {
-  font-weight: bold;
-  font-size: 16px;
-
-}
-
-td.actorNames {
-  font-weight: bold;
-  font-size: 16px;
-}
-
+/* Text styles for table data */
+td.title,
+td.genreNames,
+td.actorNames,
 td.releaseYear {
   font-weight: bold;
   font-size: 16px;
 }
 
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  flex-wrap: nowrap;
+  gap: 5px;
+  /* Prevent wrapping to a new line */
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+
+  button {
+      white-space: nowrap;
+      /* Ensure text doesn't wrap */
+    }
+
+    .header-controls,
+    .pagination-controls {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+  .search-bar {
+    margin-top: 10px;
+  }
+
+  .pagination-controls {
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 0 10px;
+    gap: 3px;
+    /* Add padding on small screens */
+  }
+
+  .pagination-controls button {
+    flex: 1;
+    /* Each button takes equal space */
+     margin: 0 5px;
+     /* Add some space between buttons */
+  }
+
+        .search-bar input[type="text"] {
+          width: calc(100% - 100px);
+          /* Adjust width to leave space for button */
+        }
+
+        .search-bar button {
+          white-space: nowrap;
+          margin-left: 10px;
+          /* Prevent text wrapping inside button */
+        }
+}

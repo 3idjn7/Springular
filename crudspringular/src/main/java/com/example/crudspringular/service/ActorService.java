@@ -4,6 +4,8 @@ import com.example.crudspringular.dto.ActorDTO;
 import com.example.crudspringular.entity.Actor;
 import com.example.crudspringular.repository.ActorRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,6 +28,12 @@ public class ActorService {
         ActorDTO savedActorDTO = convertToDto(savedActor);
         log.info("Saved actor: {}", savedActorDTO.getName());
         return savedActorDTO;
+    }
+
+    public Page<ActorDTO> searchActors(String name, int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return actorRepository.findByNameContainingIgnoreCase(name, pageRequest)
+                .map(this::convertToDto);
     }
 
     public List<ActorDTO> findAllActors() {

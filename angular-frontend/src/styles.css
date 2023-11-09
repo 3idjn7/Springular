@@ -26,6 +26,18 @@ button {
   /* To include padding in the width */
 }
 
+button.update,
+button.addMovie,
+button.actors,
+button.genres,
+button.search {
+  /* No additional styles needed if they all share the same look */
+}
+
+button.delete {
+  background-color: #d9534f;
+}
+
 button {
   background: #5cb85c;
   /* Bootstrap 'success' color */
@@ -35,6 +47,7 @@ button {
 }
 
 button:hover {
+  transform: scale(1.1);
   opacity: 0.8;
 }
 
@@ -48,6 +61,7 @@ button:hover {
     width: 100%;
   }
 }
+
 
 /* New styles for movies and other components */
 .table {

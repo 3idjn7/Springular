@@ -15,6 +15,8 @@ import { GenresComponent } from './genres/genres.component';
 import { MovieFormComponent } from './movie-form/movie-form.component';
 import { HomeComponent } from './home/home.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { CeilPipe } from './ceil.pipe';
+
 
 
 @NgModule({
@@ -28,7 +30,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     ActorsComponent,
     GenresComponent,
     MovieFormComponent,
-    HomeComponent
+    HomeComponent,
+    CeilPipe
   ],
   imports: [
     BrowserModule,

@@ -9,6 +9,8 @@ import com.example.crudspringular.entity.Movie;
 import com.example.crudspringular.repository.MovieRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -57,6 +59,12 @@ public class MovieService {
 
         Movie updatedMovie = movieRepository.save(movie);
         return convertToDto(updatedMovie);
+    }
+
+    public Page<MovieDTO> searchMovies(String title, int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return movieRepository.findByTitleContainingIgnoreCase(title, pageRequest)
+                .map(this::convertToDto);
     }
 
 

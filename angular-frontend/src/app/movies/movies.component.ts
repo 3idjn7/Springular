@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { MovieService } from '../services/movie.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
 
 
 @Component({
@@ -9,26 +12,39 @@ import { Router } from '@angular/router';
   styleUrls: ['./movies.component.css']
 })
 export class MoviesComponent implements OnInit {
+  private unsubscribe$ = new Subject<void>();
 
   movies!: any[];
+  searchTerm: string = '';
+  currentPage: number = 0;
+  pageSize: number = 5;
+  totalItems: number = 0;
 
   constructor(
     private movieService: MovieService,
     private router: Router,
+    private route: ActivatedRoute,
   ) { }
 
   ngOnInit() {
-    console.log('MoviesComponent initialized');
-    this.reloadData();
+      this.route.queryParams.pipe(takeUntil(this.unsubscribe$)).subscribe(params => {
+        this.currentPage = params['page'] ? parseInt(params['page'], 10) : 0;
+        this.searchMovies(this.currentPage);
+      });
   }
 
-    reloadData() {
-      console.log('Reloading movie data...');
-      this.movieService.getMovies().subscribe(data => {
-        // Log raw movie data
-        console.log('Data from getMovies:', data);
+  ngOnDestroy() {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
 
-        const processedMovies = data.map((movie: any) => {
+  reloadData() {
+    console.log('Reloading movie data...');
+    this.movieService.getMovies().subscribe(data => {
+        // Log raw movie data
+      console.log('Data from getMovies:', data);
+
+          const processedMovies = data.map((movie: any) => {
           // Log the raw genre and actors to see their structure for each movie
           console.log('Processing movie:', movie);
           console.log('Raw genre:', movie.genre);
@@ -53,7 +69,7 @@ export class MoviesComponent implements OnInit {
 
         this.movies = processedMovies;
       }, error => console.log('Error fetching movies:', error));
-    }
+  }
 
 
 
@@ -81,5 +97,38 @@ export class MoviesComponent implements OnInit {
 
   updateMovie(id: number) {
     this.router.navigate(['/movie/edit', id]);
+  }
+
+  searchMovies(page: number = this.currentPage): void {
+  this.movieService.searchMovies(this.searchTerm, page, this.pageSize).subscribe(data => {
+    const processedMovies = data['content'].map((movie: any) => {
+      const genreNames = movie.genres && movie.genres.length > 0
+        ? movie.genres.map((g: { name: any; }) => g.name).join(', ')
+        : 'N/A';
+      const actorNames = movie.actors && movie.actors.length > 0
+        ? movie.actors.map((actor: any) => actor.name).join(', ')
+        : 'No actors';
+      return {
+        ...movie,
+        genreNames: genreNames,
+        actorNames: actorNames,
+      };
+    });
+
+    this.movies = processedMovies;
+    this.totalItems = data['totalElements']; // This should be the total number of items for pagination
+    this.currentPage = page;
+    }, error => console.log('Error searching for movies:', error));
+  }
+
+    getPages(totalItems: number, pageSize: number): number[] {
+  const totalPages = Math.ceil(totalItems / pageSize);
+  return Array.from({ length: totalPages }, (_, index) => index);
+}
+
+
+  onPageChange(page: number): void {
+    this.currentPage = page;
+    this.searchMovies(page);
   }
 }

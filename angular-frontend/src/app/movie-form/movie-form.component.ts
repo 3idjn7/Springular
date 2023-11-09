@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MovieService } from '../services/movie.service';
 import { Actor } from '../models/actor.model';
@@ -18,12 +18,14 @@ export class MovieFormComponent implements OnInit {
   actors: Actor[] = [];
   genres: Genre[] = [];
   isEdit = false;
+  currentPage = 0;
 
   constructor(
     private fb: FormBuilder,
     private movieService: MovieService,
     private actorService: ActorService,
     private genreService: GenreService,
+    private router: Router,
     private location: Location,
     private route: ActivatedRoute,
   ) {
@@ -37,10 +39,14 @@ export class MovieFormComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      this.currentPage = params['page'] ? parseInt(params['page'], 10) : 0;
+    });
     this.getActors();
     this.getGenres();
     this.checkEditMode();
   }
+
   // Access method to fetch the actors to the form page
   getActors(): void {
     this.actorService.getActors()
@@ -84,7 +90,7 @@ export class MovieFormComponent implements OnInit {
 
   // Back button method
   goBack(): void {
-    this.location.back();
+    this.router.navigate(['/movies'], { queryParams: { page: this.currentPage } });
   }
   
   checkEditMode(): void {

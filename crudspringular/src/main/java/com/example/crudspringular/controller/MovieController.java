@@ -3,6 +3,7 @@ package com.example.crudspringular.controller;
 import com.example.crudspringular.dto.MovieDTO;
 import com.example.crudspringular.service.MovieService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -44,7 +45,7 @@ public class MovieController {
         return ResponseEntity.ok(movieDTOs);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id:[\\d]+}")
     public ResponseEntity<MovieDTO> getMovieById(@PathVariable Long id) {
         log.info("Received request to get movie with ID: {}", id);
         Optional<MovieDTO> movieDTO = movieService.findMovieById(id);
@@ -53,6 +54,14 @@ public class MovieController {
                     log.info("Movie with ID: {} not found", id);
                     return ResponseEntity.notFound().build();
                 });
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<MovieDTO>> searchMovies(
+            @RequestParam String query,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(movieService.searchMovies(query, page, size));
     }
 
     @DeleteMapping("/{id}")
