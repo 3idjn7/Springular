@@ -53,30 +53,49 @@ export class MovieFormComponent implements OnInit {
   }
 
   onSubmit(): void {
-      if (this.movieForm.valid) {
-         let movieData = this.movieForm.value;
-         movieData.releaseYear = parseInt(movieData.releaseYear, 10);
-         console.log('Selected genres:', movieData.genres);
-           if (this.isEdit) {
-              this.movieService.updateMovie(movieData.id, movieData).subscribe(result => {
-               console.log(result);
-              }); 
-            } else {
-              this.movieService.addMovie(movieData).subscribe(result => {
-              console.log(result);
-            });
-         }
+    if (this.movieForm.valid) {
+      let movieData = this.movieForm.value;
+      movieData.releaseYear = parseInt(movieData.releaseYear, 10);
+      console.log('Selected genres:', movieData.genres);
+
+      if (this.isEdit) {
+        // Obtain the ID from the route parameters and ensure it is a number.
+        const movieId = this.route.snapshot.params['id'];
+        if (movieId) {
+          this.movieService.updateMovie(movieId, movieData).subscribe(result => {
+            console.log('Movie updated:', result);
+            // Add navigation or success message here if needed
+          }, error => {
+            console.error('Error updating movie:', error);
+          });
+        } else {
+          console.error('Movie ID is undefined');
+        }
+      } else {
+        this.movieService.addMovie(movieData).subscribe(result => {
+          console.log('Movie added:', result);
+          // Add navigation or success message here if needed
+        }, error => {
+          console.error('Error adding movie:', error);
+        });
       }
-  }
+    }
+}
+
   // Back button method
   goBack(): void {
     this.location.back();
   }
   
   checkEditMode(): void {
-    const movieId = this.route.snapshot.params['id'];
-    if (movieId) {
-      this.isEdit = true;
-    }
+  const movieId = this.route.snapshot.params['id'];
+  if (movieId && movieId !== 'undefined') {
+    this.isEdit = true;
+    this.movieService.getMovie(movieId).subscribe(movie => {
+      this.movieForm.patchValue(movie);
+    });
+  } else {
+    console.log('error at checkEditMode')
   }
+}
 }

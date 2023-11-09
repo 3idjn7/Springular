@@ -28,6 +28,14 @@ public class MovieController {
         return new ResponseEntity<>(savedMovieDTO, HttpStatus.CREATED);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<MovieDTO> updateMovie(@PathVariable Long id, @RequestBody MovieDTO movieDTO) {
+        log.info("Received request to update movie with ID: {}", id);
+        MovieDTO updatedMovieDTO = movieService.updateMovie(id, movieDTO);
+        log.info("Updated movie with ID: {}", updatedMovieDTO.getId());
+        return ResponseEntity.ok(updatedMovieDTO);
+    }
+
     @GetMapping
     public ResponseEntity<List<MovieDTO>> getAllMovies() {
         log.info("Received request to list all movies");

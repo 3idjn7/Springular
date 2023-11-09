@@ -37,6 +37,29 @@ public class MovieService {
         return savedMovieDTO;
     }
 
+    public MovieDTO updateMovie(Long id, MovieDTO movieDTO) {
+        log.info("Attempting to update movie with ID: {}", id);
+        Movie movie = movieRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Movie not found with id " + id));
+
+        movie.setTitle(movieDTO.getTitle());
+        movie.setReleaseYear(movieDTO.getReleaseYear());
+
+        List<Genre> genres = movieDTO.getGenres().stream()
+                .map(genreDTO -> genreService.findGenreById(genreDTO.getId()))
+                .collect(Collectors.toList());
+        movie.setGenres(genres);
+
+        List<Actor> actors = movieDTO.getActors().stream()
+                .map(actorDTO -> actorService.findActorById(actorDTO.getId()))
+                .collect(Collectors.toList());
+        movie.setActors(actors);
+
+        Movie updatedMovie = movieRepository.save(movie);
+        return convertToDto(updatedMovie);
+    }
+
+
     public List<MovieDTO> findAllMovies() {
         log.info("Attempting to fetch all movies");
         List<MovieDTO> movies = movieRepository.findAll().stream()
