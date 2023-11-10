@@ -45,17 +45,20 @@ public class MovieService {
         Movie movie = movieRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Movie not found with id " + id));
 
-        movie.setTitle(movieDTO.getTitle());
-        movie.setReleaseYear(movieDTO.getReleaseYear());
-
+        // Fetch genres by their IDs in a single query
         List<Genre> genres = movieDTO.getGenres().stream()
                 .map(genreDTO -> genreService.findGenreById(genreDTO.getId()))
                 .collect(Collectors.toList());
-        movie.setGenres(genres);
 
+        // Similarly, fetch actors by their IDs in a single query
         List<Actor> actors = movieDTO.getActors().stream()
                 .map(actorDTO -> actorService.findActorById(actorDTO.getId()))
                 .collect(Collectors.toList());
+
+        // Update the movie entity
+        movie.setTitle(movieDTO.getTitle());
+        movie.setReleaseYear(movieDTO.getReleaseYear());
+        movie.setGenres(genres);
         movie.setActors(actors);
 
         Movie updatedMovie = movieRepository.save(movie);
