@@ -18,11 +18,11 @@ export class GenresComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    console.log('GenresComponent initialized');
+    // Initialize component
     this.getGenres();
   }
   
-  // This retrieves the genres when the component initializes.
+  // Retrieve genres when the component initializes
   getGenres(): void {
     console.log('Fetching genres...');
     this.genreService.getGenres()
@@ -32,15 +32,17 @@ export class GenresComponent implements OnInit {
       });
   }
 
-  // Method to handle deletion of a genre
-  delete(genre: Genre): void {
+  // Handle deletion of a genre
+  deleteGenre(genre: Genre): void {
     if (confirm(`Are you sure you want to delete ${genre.name}?`)) {
       this.genres = this.genres.filter(g => g !== genre);
-      this.genreService.deleteGenre(genre.id).subscribe();
+      this.genreService.deleteGenre(genre.id).subscribe(() => {
+        console.log('Genre deleted:', genre);
+      });
     }
   }
 
-  // Method to handle adding a new genre
+  // Handle adding a new genre
   addGenre(): void {
     if (this.newGenre) {
       console.log('Adding genre:', this.newGenre);
@@ -53,7 +55,8 @@ export class GenresComponent implements OnInit {
       console.log('New genre input is empty. No genre added.');
     }
   }
-  // Method for the button to go back
+
+  // Navigate back
   goBack(): void {
     this.location.back();
   }

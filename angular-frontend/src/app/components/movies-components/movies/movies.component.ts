@@ -1,43 +1,42 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MovieService } from '../../services/movie.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-
-
 
 @Component({
   selector: 'app-movies',
   templateUrl: './movies.component.html',
   styleUrls: ['./movies.component.css']
 })
-export class MoviesComponent implements OnInit {
+export class MoviesComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject<void>();
 
-  movies!: any[];
-  searchTerm: string = '';
-  currentPage: number = 0;
-  pageSize: number = 5;
-  totalItems: number = 0;
+  movies: any[] = [];
+  searchTerm = '';
+  currentPage = 0;
+  pageSize = 5;
+  totalItems = 0;
 
   constructor(
     private movieService: MovieService,
     private router: Router,
-    private route: ActivatedRoute,
-  ) { }
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit() {
-  this.route.queryParams.pipe(takeUntil(this.unsubscribe$)).subscribe(params => {
-    this.currentPage = params['page'] ? parseInt(params['page'], 10) : 0;
-    this.searchTerm = params['searchTerm'] || '';
+    this.route.queryParams.pipe(takeUntil(this.unsubscribe$)).subscribe(params => {
+      // Get the current page and search term from query params
+      this.currentPage = params['page'] ? parseInt(params['page'], 10) : 0;
+      this.searchTerm = params['searchTerm'] || '';
 
-    if (this.searchTerm) {
-      this.searchMovies(this.currentPage);
-    } else {
-      this.reloadData(this.currentPage);
-    }
-  });
-}
+      if (this.searchTerm) {
+        this.searchMovies(this.currentPage);
+      } else {
+        this.reloadData(this.currentPage);
+      }
+    });
+  }
 
   ngOnDestroy() {
     this.unsubscribe$.next();
@@ -45,38 +44,34 @@ export class MoviesComponent implements OnInit {
   }
 
   reloadData(page: number = this.currentPage, size: number = this.pageSize): void {
-  this.movieService.getMovies(page, size).subscribe({
-    next: (data) => {
-      // Here we're assuming 'data' has 'content' and 'totalElements' properties.
-      // 'content' would be the array of movies, and 'totalElements' would be the total count.
-      if (data.content && data.totalElements !== undefined) {
-        const processedMovies = data.content.map((movie: any) => {
-          // Process each movie object here as needed
-          return {
-            ...movie,
-            genreNames: movie.genres?.map((g: any) => g.name).join(', ') || 'N/A',
-            actorNames: movie.actors?.map((actor: any) => actor.name).join(', ') || 'No actors',
-            releaseYear: movie.releaseYear || 'Unknown',
-          };
-        });
+    this.movieService.getMovies(page, size).subscribe({
+      next: (data) => {
+        // Check if 'data' has 'content' and 'totalElements' properties
+        if (data.content && data.totalElements !== undefined) {
+          const processedMovies = data.content.map((movie: any) => {
+            // Process each movie object here as needed
+            return {
+              ...movie,
+              genreNames: movie.genres?.map((g: any) => g.name).join(', ') || 'N/A',
+              actorNames: movie.actors?.map((actor: any) => actor.name).join(', ') || 'No actors',
+              releaseYear: movie.releaseYear || 'Unknown',
+            };
+          });
 
-        // Update the component's movies and pagination-related properties
-        this.movies = processedMovies;
-        this.totalItems = data.totalElements;
-      } else {
-        // If the expected properties aren't present, log an error or handle as needed.
-        console.error('Unexpected response structure:', data);
+          // Update the component's movies and pagination-related properties
+          this.movies = processedMovies;
+          this.totalItems = data.totalElements;
+        } else {
+          // Handle unexpected response structure
+          console.error('Unexpected response structure:', data);
+        }
+      },
+      error: (error) => {
+        // Handle errors during the API call
+        console.error('Error fetching movies:', error);
       }
-    },
-    error: (error) => {
-      // Handle any errors that occur during the API call.
-      console.error('Error fetching movies:', error);
-    }
-  });
-}
-
-
-
+    });
+  }
 
   addMovie(): void {
     this.router.navigate(['/add-movie']);
@@ -87,7 +82,7 @@ export class MoviesComponent implements OnInit {
   }
 
   addGenre(): void {
-    this.router.navigate(['/add-genre']); 
+    this.router.navigate(['/add-genre']);
   }
 
   // Method to handle deletion of a movie
@@ -131,18 +126,17 @@ export class MoviesComponent implements OnInit {
         });
 
         this.movies = processedMovies;
-        this.totalItems = data['totalElements']; // This should be the total number of items for pagination
+        this.totalItems = data['totalElements']; // Total number of items for pagination
         this.currentPage = page;
       }, error => console.log('Error searching for movies:', error));
     }
   }
 
-
-    getPages(totalItems: number, pageSize: number): number[] {
-      const totalPages = Math.ceil(totalItems / pageSize);
-      return Array.from({ length: totalPages }, (_, index) => index);
-    }
-
+  // Generate an array of page numbers based on totalItems and pageSize
+  getPages(totalItems: number, pageSize: number): number[] {
+    const totalPages = Math.ceil(totalItems / pageSize);
+    return Array.from({ length: totalPages }, (_, index) => index);
+  }
 
   onPageChange(page: number): void {
     this.currentPage = page;

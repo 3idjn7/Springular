@@ -29,6 +29,7 @@ export class MovieFormComponent implements OnInit {
     private location: Location,
     private route: ActivatedRoute,
   ) {
+    // Initialize the movieForm FormGroup
     this.movieForm = this.fb.group({
       title: ['', Validators.required],
       director: ['', Validators.required],
@@ -39,11 +40,16 @@ export class MovieFormComponent implements OnInit {
   }
 
   ngOnInit() {
+    // Get the current page from query params
     this.route.queryParams.subscribe(params => {
       this.currentPage = params['page'] ? parseInt(params['page'], 10) : 0;
     });
+
+    // Fetch actors and genres
     this.getActors();
     this.getGenres();
+
+    // Check if the form is in edit mode
     this.checkEditMode();
   }
 
@@ -52,6 +58,7 @@ export class MovieFormComponent implements OnInit {
     this.actorService.getActors()
       .subscribe(actors => this.actors = actors);
   }
+
   // Access method to fetch the genres to the form page
   getGenres(): void {
     this.genreService.getGenres()
@@ -86,22 +93,22 @@ export class MovieFormComponent implements OnInit {
         });
       }
     }
-}
+  }
 
   // Back button method
   goBack(): void {
     this.router.navigate(['/movies'], { queryParams: { page: this.currentPage } });
   }
-  
+
   checkEditMode(): void {
-  const movieId = this.route.snapshot.params['id'];
-  if (movieId && movieId !== 'undefined') {
-    this.isEdit = true;
-    this.movieService.getMovie(movieId).subscribe(movie => {
-      this.movieForm.patchValue(movie);
-    });
-  } else {
-    console.log('error at checkEditMode')
+    const movieId = this.route.snapshot.params['id'];
+    if (movieId && movieId !== 'undefined') {
+      this.isEdit = true;
+      this.movieService.getMovie(movieId).subscribe(movie => {
+        this.movieForm.patchValue(movie);
+      });
+    } else {
+      console.log('error at checkEditMode');
+    }
   }
-}
 }
