@@ -18,13 +18,10 @@ const routes: Routes = [
   { path: 'product/add', component: ProductCreateComponent },
   { path: 'product/edit/:id', component: ProductEditComponent },
   { path: 'movies', component: MoviesComponent },
-  { path: 'movie/add', component: MovieFormComponent },
   { path: 'movie/edit/:id', component: MovieFormComponent },
   { path: 'add-movie', component: MovieFormComponent },
   { path: 'add-actor', component: ActorsComponent },
   { path: 'add-genre', component: GenresComponent },
-  
-
   { path: '**', redirectTo: '/home' }
 ];
 
