@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -7,18 +7,21 @@ import { Actor } from '../../models/actor.model';
 import { Genre } from '../../models/genre.model';
 import { ActorService } from '../../services/actor.service';
 import { GenreService } from '../../services/genre.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-movie-form',
   templateUrl: './movie-form.component.html',
   styleUrls: ['./movie-form.component.css']
 })
-export class MovieFormComponent implements OnInit {
+export class MovieFormComponent implements OnInit, OnDestroy {
   movieForm: FormGroup;
   actors: Actor[] = [];
   genres: Genre[] = [];
   isEdit = false;
   currentPage = 0;
+  private unsubscribe$ = new Subject<void>();
 
   constructor(
     private fb: FormBuilder,
@@ -41,7 +44,7 @@ export class MovieFormComponent implements OnInit {
 
   ngOnInit() {
     // Get the current page from query params
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.pipe(takeUntil(this.unsubscribe$)).subscribe(params => {
       this.currentPage = params['page'] ? parseInt(params['page'], 10) : 0;
     });
 
@@ -53,15 +56,22 @@ export class MovieFormComponent implements OnInit {
     this.checkEditMode();
   }
 
+  ngOnDestroy() {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
   // Access method to fetch the actors to the form page
   getActors(): void {
     this.actorService.getActors()
+      .pipe(takeUntil(this.unsubscribe$))
       .subscribe(actors => this.actors = actors);
   }
 
   // Access method to fetch the genres to the form page
   getGenres(): void {
     this.genreService.getGenres()
+      .pipe(takeUntil(this.unsubscribe$))
       .subscribe(genres => this.genres = genres);
   }
 
@@ -75,22 +85,26 @@ export class MovieFormComponent implements OnInit {
         // Obtain the ID from the route parameters and ensure it is a number.
         const movieId = this.route.snapshot.params['id'];
         if (movieId) {
-          this.movieService.updateMovie(movieId, movieData).subscribe(result => {
-            console.log('Movie updated:', result);
-            // Add navigation or success message here if needed
-          }, error => {
-            console.error('Error updating movie:', error);
-          });
+          this.movieService.updateMovie(movieId, movieData)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(result => {
+              console.log('Movie updated:', result);
+              // Add navigation or success message here if needed
+            }, error => {
+              console.error('Error updating movie:', error);
+            });
         } else {
           console.error('Movie ID is undefined');
         }
       } else {
-        this.movieService.addMovie(movieData).subscribe(result => {
-          console.log('Movie added:', result);
-          // Add navigation or success message here if needed
-        }, error => {
-          console.error('Error adding movie:', error);
-        });
+        this.movieService.addMovie(movieData)
+          .pipe(takeUntil(this.unsubscribe$))
+          .subscribe(result => {
+            console.log('Movie added:', result);
+            // Add navigation or success message here if needed
+          }, error => {
+            console.error('Error adding movie:', error);
+          });
       }
     }
   }
@@ -104,9 +118,11 @@ export class MovieFormComponent implements OnInit {
     const movieId = this.route.snapshot.params['id'];
     if (movieId && movieId !== 'undefined') {
       this.isEdit = true;
-      this.movieService.getMovie(movieId).subscribe(movie => {
-        this.movieForm.patchValue(movie);
-      });
+      this.movieService.getMovie(movieId)
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe(movie => {
+          this.movieForm.patchValue(movie);
+        });
     } else {
       console.log('error at checkEditMode');
     }

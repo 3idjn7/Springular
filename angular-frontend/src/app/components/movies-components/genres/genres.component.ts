@@ -1,16 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Location } from '@angular/common';
 import { GenreService } from '../../services/genre.service';
 import { Genre } from '../../models/genre.model';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-genres',
   templateUrl: './genres.component.html',
   styleUrls: ['./genres.component.css']
 })
-export class GenresComponent implements OnInit {
+export class GenresComponent implements OnInit, OnDestroy {
   genres: Genre[] = [];
   newGenre: string = '';
+  private unsubscribe$ = new Subject<void>();
 
   constructor(
     private genreService: GenreService,
@@ -21,11 +24,18 @@ export class GenresComponent implements OnInit {
     // Initialize component
     this.getGenres();
   }
-  
+
+  ngOnDestroy() {
+    // Unsubscribe from observables to prevent memory leaks
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
   // Retrieve genres when the component initializes
   getGenres(): void {
     console.log('Fetching genres...');
     this.genreService.getGenres()
+      .pipe(takeUntil(this.unsubscribe$))
       .subscribe(genres => {
         console.log('Genres fetched:', genres);
         this.genres = genres;
