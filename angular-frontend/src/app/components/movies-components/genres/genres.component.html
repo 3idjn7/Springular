@@ -8,7 +8,6 @@
 <ul class="genres">
   <li *ngFor="let genre of genres">
     <span>{{ genre.name }}</span>
-    <button class="delete" title="delete genre" (click)="delete(genre)">Remove</button>
+    <button class="delete" title="delete genre" (click)="deleteGenre(genre)">Remove</button>
   </li>
 </ul>
-<!-- You can enhance this by adding forms for adding/editing genres -->

@@ -8,6 +8,6 @@
 <ul class="actors">
   <li *ngFor="let actor of actors">
     <span>{{ actor.name }}</span>
-    <button class="delete" title="delete actor" (click)="delete(actor)">Remove</button>
+    <button class="delete" title="delete actor" (click)="deleteActor(actor)">Remove</button>
   </li>
 </ul>
