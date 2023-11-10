@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { MovieService } from '../services/movie.service';
-import { Actor } from '../models/actor.model';
-import { Genre } from '../models/genre.model';
-import { ActorService } from '../services/actor.service';
-import { GenreService } from '../services/genre.service';
+import { MovieService } from '../../services/movie.service';
+import { Actor } from '../../models/actor.model';
+import { Genre } from '../../models/genre.model';
+import { ActorService } from '../../services/actor.service';
+import { GenreService } from '../../services/genre.service';
 
 @Component({
   selector: 'app-movie-form',

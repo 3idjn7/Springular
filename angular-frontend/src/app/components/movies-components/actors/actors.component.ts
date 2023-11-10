@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
-import { ActorService } from '../services/actor.service';
-import { Actor } from '../models/actor.model';
+import { ActorService } from '../../services/actor.service';
+import { Actor } from '../../models/actor.model';
 
 @Component({
   selector: 'app-actors',
