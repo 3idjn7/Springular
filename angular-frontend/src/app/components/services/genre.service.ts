@@ -17,12 +17,6 @@ export class GenreService {
     return this.http.get<Genre[]>(this.genresUrl);
   }
 
-  // Get a genre by ID
-  getGenre(id: number): Observable<Genre> {
-    const url = `${this.genresUrl}/${id}`;
-    return this.http.get<Genre>(url);
-  }
-
   // Add a new genre with a name
   addGenre(name: string): Observable<Genre> {
     console.log(`GenreService: addGenre called with name '${name}'`);
@@ -33,15 +27,5 @@ export class GenreService {
   deleteGenre(id: number): Observable<any> {
     console.log(`GenreService: deleteGenre called with id ${id}`);
     return this.http.delete(`${this.genresUrl}/${id}`);
-  }
-
-  // Update a genre
-  updateGenre(genre: Genre): Observable<any> {
-    return this.http.put(this.genresUrl, genre);
-  }
-
-  // Find or create a genre by name
-  findOrCreateGenre(name: string): Observable<Genre> {
-    return this.http.post<Genre>(`${this.genresUrl}/findOrCreate`, { name });
   }
 }
