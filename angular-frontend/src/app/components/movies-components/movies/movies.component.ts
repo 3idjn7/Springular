@@ -11,6 +11,7 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class MoviesComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject<void>();
+  public unsubscribed = false;
 
   movies: any[] = [];
   searchTerm = '';
@@ -25,7 +26,9 @@ export class MoviesComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    console.log('ngOnInit called');
     this.route.queryParams.pipe(takeUntil(this.unsubscribe$)).subscribe(params => {
+      console.log('queryParams:', params);
       // Get the current page and search term from query params
       this.currentPage = params['page'] ? parseInt(params['page'], 10) : 0;
       this.searchTerm = params['searchTerm'] || '';
@@ -41,9 +44,11 @@ export class MoviesComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+    this.unsubscribed = true;
   }
 
   reloadData(page: number = this.currentPage, size: number = this.pageSize): void {
+    console.log('reloadData called');
     this.movieService.getMovies(page, size).subscribe({
       next: (data) => {
         // Check if 'data' has 'content' and 'totalElements' properties

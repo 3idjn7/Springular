@@ -8,7 +8,7 @@ import { Genre } from '../../models/genre.model';
 import { ActorService } from '../../services/actor.service';
 import { GenreService } from '../../services/genre.service';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { map, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-movie-form',
@@ -44,9 +44,15 @@ export class MovieFormComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     // Get the current page from query params
-    this.route.queryParams.pipe(takeUntil(this.unsubscribe$)).subscribe(params => {
-      this.currentPage = params['page'] ? parseInt(params['page'], 10) : 0;
-    });
+    this.route.queryParams
+      .pipe(
+        takeUntil(this.unsubscribe$),
+        // Use the map operator to extract the 'page' query parameter
+        map(params => params['page'] ? parseInt(params['page'], 10) : 0)
+      )
+      .subscribe(currentPage => {
+        this.currentPage = currentPage;
+      });
 
     // Fetch actors and genres
     this.getActors();
@@ -55,6 +61,7 @@ export class MovieFormComponent implements OnInit, OnDestroy {
     // Check if the form is in edit mode
     this.checkEditMode();
   }
+
 
   ngOnDestroy() {
     this.unsubscribe$.next();
@@ -115,16 +122,21 @@ export class MovieFormComponent implements OnInit, OnDestroy {
   }
 
   checkEditMode(): void {
-    const movieId = this.route.snapshot.params['id'];
-    if (movieId && movieId !== 'undefined') {
-      this.isEdit = true;
-      this.movieService.getMovie(movieId)
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe(movie => {
-          this.movieForm.patchValue(movie);
-        });
+    if (this.route && this.route.snapshot && this.route.snapshot.params) {
+      const movieId = this.route.snapshot.params['id'];
+      if (movieId && movieId !== 'undefined') {
+        this.isEdit = true;
+        this.movieService.getMovie(movieId)
+          .pipe(takeUntil(this.unsubscribe$))
+          .subscribe(movie => {
+            this.movieForm.patchValue(movie);
+          });
+      } else {
+        console.log('Movie ID is undefined');
+      }
     } else {
-      console.log('error at checkEditMode');
+      console.log('Error at checkEditMode: Route or params is undefined');
     }
   }
+
 }
