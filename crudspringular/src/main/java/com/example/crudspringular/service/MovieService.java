@@ -46,14 +46,18 @@ public class MovieService {
                 .orElseThrow(() -> new RuntimeException("Movie not found with id " + id));
 
         // Fetch genres by their IDs in a single query
-        List<Genre> genres = movieDTO.getGenres().stream()
-                .map(genreDTO -> genreService.findGenreById(genreDTO.getId()))
-                .collect(Collectors.toList());
+        List<Genre> genres = movieDTO.getGenres() != null ?
+                movieDTO.getGenres().stream()
+                        .map(genreDTO -> genreService.findGenreById(genreDTO.getId()))
+                        .collect(Collectors.toList()) :
+                Collections.emptyList();
 
         // Similarly, fetch actors by their IDs in a single query
-        List<Actor> actors = movieDTO.getActors().stream()
-                .map(actorDTO -> actorService.findActorById(actorDTO.getId()))
-                .collect(Collectors.toList());
+        List<Actor> actors = movieDTO.getActors() != null ?
+                movieDTO.getActors().stream()
+                        .map(actorDTO -> actorService.findActorById(actorDTO.getId()))
+                        .collect(Collectors.toList()) :
+                Collections.emptyList();
 
         // Update the movie entity
         movie.setTitle(movieDTO.getTitle());
@@ -64,6 +68,7 @@ public class MovieService {
         Movie updatedMovie = movieRepository.save(movie);
         return convertToDto(updatedMovie);
     }
+
 
     public Page<MovieDTO> searchMovies(String searchTerm, int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);

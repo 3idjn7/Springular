@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/crudspringular.iml" filepath="$PROJECT_DIR$/.idea/modules/crudspringular.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/crudspringular.main.iml" filepath="$PROJECT_DIR$/.idea/modules/crudspringular.main.iml" />
+    </modules>
+  </component>
+</project>
