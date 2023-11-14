@@ -20,6 +20,9 @@ public class GenreService {
 
     public GenreDTO saveGenre(GenreDTO genreDTO) {
         log.info("Attempting to save genre: {}", genreDTO.getName());
+        if (genreRepository.findByName(genreDTO.getName()).isPresent()) {
+            throw new IllegalStateException("Genre with name '" + genreDTO.getName() + "' already exists");
+        }
         Genre genre = convertToEntity(genreDTO);
         Genre savedGenre = genreRepository.save(genre);
         GenreDTO savedGenreDTO = convertToDto(savedGenre);

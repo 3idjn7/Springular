@@ -30,14 +30,21 @@ public class MovieService {
         this.genreService = genreService;
         this.actorService = actorService;
     }
-
+    //Composite key validation: title and release year
     public MovieDTO saveMovie(MovieDTO movieDTO) {
         log.info("Attempting to save movie: {}", movieDTO.getTitle());
+        movieRepository.findByTitleAndReleaseYear(movieDTO.getTitle(), movieDTO.getReleaseYear())
+                .ifPresent(movie -> {
+                    throw new IllegalStateException("Movie with title '" + movieDTO.getTitle() +
+                                                    "' and release year '" + movieDTO.getReleaseYear() +
+                                                    "' already exists");
+                });
+        validateGenresAndActors(movieDTO);
+
         Movie movie = convertToEntity(movieDTO);
         Movie savedMovie = movieRepository.save(movie);
-        MovieDTO savedMovieDTO = convertToDto(savedMovie);
-        log.info("Saved movie: {}", savedMovieDTO.getTitle());
-        return savedMovieDTO;
+        log.info("Saved movie: {}", savedMovie.getTitle());
+        return convertToDto(savedMovie);
     }
 
     public MovieDTO updateMovie(Long id, MovieDTO movieDTO) {
@@ -67,6 +74,21 @@ public class MovieService {
 
         Movie updatedMovie = movieRepository.save(movie);
         return convertToDto(updatedMovie);
+    }
+
+    private void validateGenresAndActors(MovieDTO movieDTO) {
+        // Validate genres
+        if (movieDTO.getGenres() != null) {
+            for (GenreDTO genreDTO : movieDTO.getGenres()) {
+                genreService.findGenreById(genreDTO.getId());
+            }
+        }
+        // Validate actors
+        if (movieDTO.getActors() != null) {
+            for (ActorDTO actorDTO : movieDTO.getActors()) {
+                actorService.findActorById(actorDTO.getId());
+            }
+        }
     }
 
 

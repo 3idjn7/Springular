@@ -2,6 +2,7 @@ package com.example.crudspringular.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ public class Actor {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Actor name must not be blank")
     private String name;
 
     @ManyToMany(mappedBy = "actors")

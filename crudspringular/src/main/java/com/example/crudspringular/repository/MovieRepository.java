@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
 
 
 @Repository
@@ -16,4 +17,5 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
             "LOWER(m.title) LIKE LOWER(CONCAT('%', :searchTerm, '%')) " +
             "OR LOWER(a.name) LIKE LOWER(CONCAT('%', :searchTerm, '%'))")
     Page<Movie> findByTitleContainingIgnoreCaseOrActorNameContainingIgnoreCase(@Param("searchTerm") String searchTerm, Pageable pageable);
+    Optional<Movie> findByTitleAndReleaseYear(String title, Integer releaseYear);
 }

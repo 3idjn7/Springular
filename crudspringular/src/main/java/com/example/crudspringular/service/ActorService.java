@@ -22,6 +22,9 @@ public class ActorService {
 
     public ActorDTO saveActor(ActorDTO actorDTO) {
         log.info("Attempting to save actor: {}", actorDTO.getName());
+        if (actorRepository.findByName(actorDTO.getName()).isPresent()) {
+            throw new IllegalStateException("Actor with name '" + actorDTO.getName() + "' already exists");
+        }
         Actor actor = convertToEntity(actorDTO);
         Actor savedActor = actorRepository.save(actor);
         ActorDTO savedActorDTO = convertToDto(savedActor);
