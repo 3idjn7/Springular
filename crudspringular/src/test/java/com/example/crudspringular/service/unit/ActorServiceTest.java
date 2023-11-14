@@ -1,8 +1,9 @@
-package com.example.crudspringular.service;
+package com.example.crudspringular.service.unit;
 
 import com.example.crudspringular.dto.ActorDTO;
 import com.example.crudspringular.entity.Actor;
 import com.example.crudspringular.repository.ActorRepository;
+import com.example.crudspringular.service.ActorService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

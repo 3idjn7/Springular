@@ -49,6 +49,11 @@ public class MovieService {
 
     public MovieDTO updateMovie(Long id, MovieDTO movieDTO) {
         log.info("Attempting to update movie with ID: {}", id);
+
+        if (movieDTO.getTitle() == null || movieDTO.getReleaseYear() == null) {
+            throw new IllegalArgumentException("Movie title and release year must not be null");
+        }
+
         Movie movie = movieRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Movie not found with id " + id));
 
@@ -94,10 +99,9 @@ public class MovieService {
 
     public Page<MovieDTO> searchMovies(String searchTerm, int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        return movieRepository.findByTitleContainingIgnoreCaseOrActorNameContainingIgnoreCase(searchTerm, pageRequest)
-                .map(this::convertToDto);
+        Page<Movie> movies = movieRepository.findByTitleContainingIgnoreCaseOrActorNameContainingIgnoreCase(searchTerm, pageRequest);
+        return (movies != null) ? movies.map(this::convertToDto) : Page.empty();
     }
-
 
     public Page<MovieDTO> findAllMovies(Pageable pageable) {
         log.info("Attempting to fetch all movies");
