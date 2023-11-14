@@ -3,13 +3,13 @@ package com.example.crudspringular.controller;
 import com.example.crudspringular.dto.GenreDTO;
 import com.example.crudspringular.entity.Genre;
 import com.example.crudspringular.service.GenreService;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -22,7 +22,7 @@ public class GenreController {
     }
 
     @PostMapping
-    public ResponseEntity<GenreDTO> createGenre(@RequestBody GenreDTO genreDTO) {
+    public ResponseEntity<GenreDTO> createGenre(@Valid @RequestBody GenreDTO genreDTO) {
         log.info("Received request to create genre: {}", genreDTO.getName());
         GenreDTO savedGenreDTO = genreService.saveGenre(genreDTO);
         log.info("Created genre with ID: {}", savedGenreDTO.getId());

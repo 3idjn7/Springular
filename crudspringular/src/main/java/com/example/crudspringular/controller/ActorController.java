@@ -3,6 +3,7 @@ package com.example.crudspringular.controller;
 import com.example.crudspringular.dto.ActorDTO;
 import com.example.crudspringular.entity.Actor;
 import com.example.crudspringular.service.ActorService;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -22,7 +23,7 @@ public class ActorController {
     }
 
     @PostMapping
-    public ResponseEntity<ActorDTO> createActor(@RequestBody ActorDTO actorDTO) {
+    public ResponseEntity<ActorDTO> createActor(@Valid @RequestBody ActorDTO actorDTO) {
         log.info("Received request to create actor: {}", actorDTO.getName());
         ActorDTO savedActorDTO = actorService.saveActor(actorDTO);
         log.info("Created actor with ID: {}", savedActorDTO.getId());

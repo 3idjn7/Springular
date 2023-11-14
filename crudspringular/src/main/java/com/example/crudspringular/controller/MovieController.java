@@ -2,6 +2,8 @@ package com.example.crudspringular.controller;
 
 import com.example.crudspringular.dto.MovieDTO;
 import com.example.crudspringular.service.MovieService;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -9,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -23,7 +24,7 @@ public class MovieController {
     }
 
     @PostMapping
-    public ResponseEntity<MovieDTO> createMovie(@RequestBody MovieDTO movieDTO) {
+    public ResponseEntity<MovieDTO> createMovie(@Valid @RequestBody MovieDTO movieDTO) {
         log.info("Received request to create movie: {}", movieDTO.getTitle());
         MovieDTO savedMovieDTO = movieService.saveMovie(movieDTO);
         log.info("Created movie with ID: {}", savedMovieDTO.getId());
@@ -31,11 +32,22 @@ public class MovieController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<MovieDTO> updateMovie(@PathVariable Long id, @RequestBody MovieDTO movieDTO) {
+    public ResponseEntity<?> updateMovie(@PathVariable Long id, @Valid @RequestBody MovieDTO movieDTO) {
         log.info("Received request to update movie with ID: {}", id);
-        MovieDTO updatedMovieDTO = movieService.updateMovie(id, movieDTO);
-        log.info("Updated movie with ID: {}", updatedMovieDTO.getId());
-        return ResponseEntity.ok(updatedMovieDTO);
+
+        // Check for positive ID
+        if (id <= 0) {
+            return ResponseEntity.badRequest().body("Invalid ID: ID must be positive.");
+        }
+
+        try {
+            MovieDTO updatedMovieDTO = movieService.updateMovie(id, movieDTO);
+            log.info("Updated movie with ID: {}", updatedMovieDTO.getId());
+            return ResponseEntity.ok(updatedMovieDTO);
+        } catch (EntityNotFoundException e) {
+            log.info("Movie with ID: {} not found", id);
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping
@@ -60,12 +72,25 @@ public class MovieController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<Page<MovieDTO>> searchMovies(
-            @RequestParam(value = "query") String query, // Changed to match the frontend
+    public ResponseEntity<?> searchMovies(
+            @RequestParam(value = "query") String query,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-        return ResponseEntity.ok(movieService.searchMovies(query, page, size));
+
+        // Sanitize and validate the query
+        String sanitizedQuery = sanitizeInput(query);
+        if (sanitizedQuery.length() > MAX_QUERY_LENGTH) {
+            return ResponseEntity.badRequest().body("Query too long");
+        }
+
+        // Validate pagination parameters
+        if (page < 0 || size <= 0 || size > MAX_PAGE_SIZE) {
+            return ResponseEntity.badRequest().body("Invalid pagination parameters");
+        }
+
+        return ResponseEntity.ok(movieService.searchMovies(sanitizedQuery, page, size));
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMovie(@PathVariable Long id) {
@@ -74,4 +99,19 @@ public class MovieController {
         log.info("Deleted movie with ID: {}", id);
         return ResponseEntity.noContent().build();
     }
+
+    private String sanitizeInput(String input) {
+        if (input == null) {
+            return null;
+        }
+
+        // Trim the input to remove leading and trailing whitespace
+        String trimmedInput = input.trim();
+
+        // Replace special characters with their escaped equivalents
+        return trimmedInput.replaceAll("[<>'\"/]", "");
+    }
+
+    private static final int MAX_QUERY_LENGTH = 255;
+    private static final int MAX_PAGE_SIZE = 50;
 }
