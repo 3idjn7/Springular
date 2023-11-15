@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  spring-boot-app:
+    build: ./crudspringular
+    ports:
+      - "8080:8080"
+
+  angular-frontend:
+    build: ./angular-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - spring-boot-app
