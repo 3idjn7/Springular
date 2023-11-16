@@ -9,6 +9,6 @@ services:
   angular-frontend:
     build: ./angular-frontend
     ports:
-      - "80:80"
+      - "4200:4200"
     depends_on:
       - spring-boot-app
