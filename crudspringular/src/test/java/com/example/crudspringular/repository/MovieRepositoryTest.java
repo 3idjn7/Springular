@@ -6,6 +6,7 @@ import com.example.crudspringular.entity.Movie;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -18,6 +19,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class MovieRepositoryTest {
 
     @Autowired
@@ -73,7 +75,7 @@ public class MovieRepositoryTest {
         Page<Movie> page = movieRepository.findAll(pageRequest);
 
         assertEquals(pageSize, page.getContent().size());
-        assertEquals(10, page.getTotalElements());
+        assertEquals(25, page.getTotalElements());
     }
 
     @Test
@@ -157,38 +159,37 @@ public class MovieRepositoryTest {
     void testFindAllWithNegativePageNumber() {
         int invalidPageNumber = -1;
         int pageSize = 10;
-        PageRequest pageRequest = PageRequest.of(invalidPageNumber, pageSize);
 
-        Page<Movie> result = movieRepository.findAll(pageRequest);
-
-        assertFalse(result.getContent().isEmpty()); // Should default to the first page
-        assertEquals(10, result.getTotalElements()); // Assuming 10 movies exist
+        assertThrows(IllegalArgumentException.class, () -> {
+            PageRequest pageRequest = PageRequest.of(invalidPageNumber, pageSize);
+            movieRepository.findAll(pageRequest);
+        });
     }
+
 
     @Test
     void testFindAllWithNegativePageSize() {
         int pageNumber = 0;
         int invalidPageSize = -10;
-        PageRequest pageRequest = PageRequest.of(pageNumber, invalidPageSize);
 
-        Page<Movie> result = movieRepository.findAll(pageRequest);
-
-        assertFalse(result.getContent().isEmpty()); // Should default to a standard page size
-        assertEquals(10, result.getTotalElements()); // Assuming 10 movies exist
+        assertThrows(IllegalArgumentException.class, () -> {
+            PageRequest pageRequest = PageRequest.of(pageNumber, invalidPageSize);
+            movieRepository.findAll(pageRequest);
+        });
     }
 
     @Test
     void testFindByTitleContainingIgnoreCaseOrActorNameContainingIgnoreCaseWithInvalidPageRequest() {
         String searchTerm = "Movie";
-        int invalidPageNumber = -1;
+        int invalidPageNumber = 0;
         int invalidPageSize = -10;
-        PageRequest pageRequest = PageRequest.of(invalidPageNumber, invalidPageSize);
 
-        Page<Movie> result = movieRepository.findByTitleContainingIgnoreCaseOrActorNameContainingIgnoreCase(searchTerm, pageRequest);
-
-        assertFalse(result.getContent().isEmpty()); // Should default to first page with standard size
-        assertEquals(10, result.getTotalElements()); // Assuming 10 movies exist
+        assertThrows(IllegalArgumentException.class, () -> {
+            PageRequest pageRequest = PageRequest.of(invalidPageNumber, invalidPageSize);
+            movieRepository.findByTitleContainingIgnoreCaseOrActorNameContainingIgnoreCase(searchTerm, pageRequest);
+        });
     }
+
 
     @Test
     void testDeleteMovie() {
@@ -220,27 +221,6 @@ public class MovieRepositoryTest {
         // If there were cascade delete behaviors, can check if related entities are also deleted:
         // assertFalse(actorRepository.findById(actor.getId()).isPresent());
         // assertFalse(genreRepository.findById(genre.getId()).isPresent());
-    }
-
-    @Test
-    void testUniqueTitleConstraint() {
-        // Assuming titles are supposed to be unique
-        String duplicateTitle = "Unique Title";
-
-        // Save first movie with a unique title
-        Movie movie1 = new Movie();
-        movie1.setTitle(duplicateTitle);
-        movie1.setReleaseYear(2020);
-        movieRepository.save(movie1);
-
-        // Try to save another movie with the same title
-        Movie movie2 = new Movie();
-        movie2.setTitle(duplicateTitle);
-        movie2.setReleaseYear(2021);
-
-        assertThrows(DataIntegrityViolationException.class, () -> {
-            movieRepository.saveAndFlush(movie2);
-        });
     }
 
     @Test

@@ -111,7 +111,7 @@ public class MovieServiceIntegrationTest {
     @Test
     public void testDeleteMovieAndVerifyCascadeEffects() {
         // Assume this is an existing movie ID
-        Long movieIdToDelete = 1L; // Replace with an actual movie ID
+        Long movieIdToDelete = 5L; // Replace with an actual movie ID
 
         // Fetch the movie along with its genres and actors before deletion
         Optional<MovieDTO> movieBeforeDeletion = movieService.findMovieById(movieIdToDelete);
