@@ -1,10 +1,29 @@
 version: '3'
 
 services:
+  mysql-db:
+    image: mysql:latest
+    environment:
+      MYSQL_DATABASE: 'springulardb'
+      MYSQL_USER: 'springuser'             # Non-root username
+      MYSQL_PASSWORD: 'userpassword'       # Password for the non-root user
+      MYSQL_ROOT_PASSWORD: 'rootpassword'  # Root password
+    volumes:
+      - mysql-data:/var/lib/mysql
+    ports:
+      - "3307:3306"
+
   spring-boot-app:
     build: ./crudspringular
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/springulardb?allowPublicKeyRetrieval=true&useSSL=false
+      SPRING_DATASOURCE_USERNAME: springuser
+      SPRING_DATASOURCE_PASSWORD: userpassword
     ports:
       - "8080:8080"
+    depends_on:
+      - mysql-db
 
   angular-frontend:
     build: ./angular-frontend
@@ -12,3 +31,6 @@ services:
       - "4200:4200"
     depends_on:
       - spring-boot-app
+
+volumes:
+  mysql-data:
