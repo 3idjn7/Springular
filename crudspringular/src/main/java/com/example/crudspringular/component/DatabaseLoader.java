@@ -1,3 +1,4 @@
+/*
 package com.example.crudspringular.component;
 
 import com.example.crudspringular.dto.ActorDTO;
@@ -68,4 +69,4 @@ public class DatabaseLoader implements CommandLineRunner {
             movieService.saveMovie(movieDTO);
         }
     }
-}
+}*/
