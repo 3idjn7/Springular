@@ -1,10 +1,29 @@
 <!-- actors.component.html -->
 <h2>Actors</h2>
 <div class="actor-controls">
-  <input type="text" [(ngModel)]="newActor" placeholder="New Actor Name">
-  <button (click)="addActor()">Add Actor</button>
-  <button (click)="goBack()" class="btn-back">Back</button>
+  <input type="text" [(ngModel)]="newActor" #newActorInput="ngModel" required minlength="3" maxlength="50"
+    pattern="[a-zA-Z0-9 ]*" placeholder="New Actor Name" class="form-control">
+  <div class="buttons">
+    <button (click)="addActor()" [disabled]="newActorInput.invalid" class="btn">Add Actor</button>
+    <button (click)="goBack()" class="btn btn-back">Back</button>
+  </div>
 </div>
+
+  <div class="validation-messages">
+    <div *ngIf="newActorInput.errors?.['required'] && newActorInput.touched" class="error-message">
+      Actor name is required.
+    </div>
+    <div *ngIf="newActorInput.errors?.['minlength'] && newActorInput.touched" class="error-message">
+      Actor name must be at least 3 characters.
+    </div>
+    <div *ngIf="newActorInput.errors?.['maxlength'] && newActorInput.touched" class="error-message">
+      Actor name must be less than 50 characters.
+    </div>
+    <div *ngIf="newActorInput.errors?.['pattern'] && newActorInput.touched" class="error-message">
+      Actor name must contain only alphanumeric characters and spaces.
+    </div>
+  </div>
+
 <ul class="actors">
   <li *ngFor="let actor of actors">
     <span>{{ actor.name }}</span>

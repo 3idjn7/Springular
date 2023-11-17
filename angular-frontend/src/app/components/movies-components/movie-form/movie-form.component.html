@@ -1,31 +1,56 @@
 <h2>Add Movie</h2>
 <div class="container">
   <form [formGroup]="movieForm" (ngSubmit)="onSubmit()">
+    <!-- Title Field -->
     <div class="form-group">
       <label for="title">Title</label>
-      <input type="text" id="title" formControlName="title" class="form-control" required>
+      <input type="text" id="title" formControlName="title" class="form-control">
+      <div *ngIf="movieForm.get('title')?.invalid && movieForm.get('title')?.touched" class="error-message">
+        Title is required.
+      </div>
     </div>
+
+    <!-- Director Field -->
     <div class="form-group">
       <label for="director">Director</label>
-      <input type="text" id="director" formControlName="director" class="form-control" required>
+      <input type="text" id="director" formControlName="director" class="form-control">
+      <div *ngIf="movieForm.get('director')?.invalid && movieForm.get('director')?.touched" class="error-message">
+        Director is required.
+      </div>
     </div>
+
+    <!-- Release Year Field -->
     <div class="form-group">
       <label for="releaseYear">Release Year</label>
-      <input type="number" id="releaseYear" formControlName="releaseYear" class="form-control" required min="1900"
-        max="2099">
+      <input type="number" id="releaseYear" formControlName="releaseYear" class="form-control">
+      <div *ngIf="movieForm.get('releaseYear')?.invalid && movieForm.get('releaseYear')?.touched" class="error-message">
+        Valid release year (1900 - 2100) is required.
+      </div>
     </div>
+
+    <!-- Actors Field -->
     <div class="form-group">
       <label for="actors">Actors</label>
       <select multiple formControlName="actors" class="form-control">
         <option *ngFor="let actor of actors" [ngValue]="actor">{{ actor.name }}</option>
       </select>
+      <div *ngIf="movieForm.get('actors')?.invalid && movieForm.get('actors')?.touched" class="error-message">
+        At least one actor is required.
+      </div>
     </div>
+
+    <!-- Genres Field -->
     <div class="form-group">
       <label for="genres">Genres</label>
       <select multiple formControlName="genres" class="form-control">
         <option *ngFor="let genre of genres" [ngValue]="genre">{{ genre.name }}</option>
       </select>
+      <div *ngIf="movieForm.get('genres')?.invalid && movieForm.get('genres')?.touched" class="error-message">
+        At least one genre is required.
+      </div>
     </div>
+
+    <!-- Form Buttons -->
     <div class="form-buttons">
       <button type="submit" class="btn btn-primary">{{ isEdit ? 'Update' : 'Create' }}</button>
       <button type="button" class="btn btn-back" (click)="goBack()">Back</button>

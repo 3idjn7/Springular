@@ -1,10 +1,29 @@
 <!-- genres.component.html -->
 <h2>Genres</h2>
 <div class="genre-controls">
-  <input type="text" [(ngModel)]="newGenre" placeholder="New Genre Name">
-  <button (click)="addGenre()">Add Genre</button>
-  <button (click)="goBack()" class="btn-back">Back</button>
+  <input type="text" [(ngModel)]="newGenre" #newGenreInput="ngModel" required minlength="3" maxlength="50"
+    pattern="[a-zA-Z0-9 ]*" placeholder="New Genre Name" class="form-control">
+  <div class="buttons">
+    <button (click)="addGenre()" [disabled]="newGenreInput.invalid" class="btn">Add Genre</button>
+    <button (click)="goBack()" class="btn btn-back">Back</button>
+  </div>
 </div>
+<div class="validation-messages">
+    <div *ngIf="newGenreInput.errors?.['required'] && newGenreInput.touched" class="error-message">
+      Genre name is required.
+    </div>
+    <div *ngIf="newGenreInput.errors?.['minlength'] && newGenreInput.touched" class="error-message">
+      Genre name must be at least 3 characters.
+    </div>
+    <div *ngIf="newGenreInput.errors?.['maxlength'] && newGenreInput.touched" class="error-message">
+      Genre name must be less than 50 characters.
+    </div>
+    <div *ngIf="newGenreInput.errors?.['pattern'] && newGenreInput.touched" class="error-message">
+      Genre name must contain only alphanumeric characters and spaces.
+    </div>
+  </div>
+
+
 <ul class="genres">
   <li *ngFor="let genre of genres">
     <span>{{ genre.name }}</span>

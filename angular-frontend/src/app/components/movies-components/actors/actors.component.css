@@ -81,6 +81,12 @@ button.btn-back {
   transition: background-color 0.2s ease;
 }
 
+.validation-messages {
+  color: red;
+  font-size: 0.85em;
+  margin-left: 20px;
+}
+
 /* Responsive adjustments */
 @media (max-width: 400px) {
 
