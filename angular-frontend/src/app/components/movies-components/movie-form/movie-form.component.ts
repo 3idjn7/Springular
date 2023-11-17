@@ -36,9 +36,14 @@ export class MovieFormComponent implements OnInit, OnDestroy {
     this.movieForm = this.fb.group({
       title: ['', Validators.required],
       director: ['', Validators.required],
-      releaseYear: ['', [Validators.required, Validators.pattern(/^\d{4}$/)]],
-      actors: [[]],
-      genres: [[]],
+      releaseYear: ['', [
+        Validators.required,
+        Validators.pattern(/^\d{4}$/),
+        Validators.min(1900),
+        Validators.max(2100),
+      ]],
+      actors: [[], Validators.required],
+      genres: [[], Validators.required],
     });
   }
 

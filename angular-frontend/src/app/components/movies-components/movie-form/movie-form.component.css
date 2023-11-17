@@ -122,6 +122,13 @@ button.btn {
   transition: background-color 0.3s ease;
 }
 
+/* Error message style */
+.error-message {
+  color: red;
+  font-size: 0.85em;
+  margin-top: 5px;
+}
+
 /* Responsive design adjustments */
 @media (max-width: 600px) {
   .container {
