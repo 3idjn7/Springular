@@ -2,11 +2,7 @@
 <h2>Actors</h2>
 <div class="actor-controls">
   <input type="text" [(ngModel)]="newActor" #newActorInput="ngModel" required minlength="3" maxlength="50"
-<<<<<<< HEAD
     pattern="[a-zA-Z0-9' ]*" placeholder="New Actor Name" class="form-control">
-=======
-    pattern="[a-zA-Z0-9 ]*" placeholder="New Actor Name" class="form-control">
->>>>>>> 2ae07ebf7fa13fcb35bc3564d7116dd65ee8c52e
   <div class="buttons">
     <button (click)="addActor()" [disabled]="newActorInput.invalid" class="btn">Add Actor</button>
     <button (click)="goBack()" class="btn btn-back">Back</button>
@@ -24,11 +20,7 @@
       Actor name must be less than 50 characters.
     </div>
     <div *ngIf="newActorInput.errors?.['pattern'] && newActorInput.touched" class="error-message">
-<<<<<<< HEAD
       Actor name must contain only alphanumeric characters, spaces and apostrophes.
-=======
-      Actor name must contain only alphanumeric characters and spaces.
->>>>>>> 2ae07ebf7fa13fcb35bc3564d7116dd65ee8c52e
     </div>
   </div>
 
