@@ -2,7 +2,11 @@
 <h2>Genres</h2>
 <div class="genre-controls">
   <input type="text" [(ngModel)]="newGenre" #newGenreInput="ngModel" required minlength="3" maxlength="50"
+<<<<<<< HEAD
     pattern="[a-zA-Z0-9' ]*" placeholder="New Genre Name" class="form-control">
+=======
+    pattern="[a-zA-Z0-9 ]*" placeholder="New Genre Name" class="form-control">
+>>>>>>> 2ae07ebf7fa13fcb35bc3564d7116dd65ee8c52e
   <div class="buttons">
     <button (click)="addGenre()" [disabled]="newGenreInput.invalid" class="btn">Add Genre</button>
     <button (click)="goBack()" class="btn btn-back">Back</button>
@@ -19,7 +23,11 @@
       Genre name must be less than 50 characters.
     </div>
     <div *ngIf="newGenreInput.errors?.['pattern'] && newGenreInput.touched" class="error-message">
+<<<<<<< HEAD
       Genre name must contain only alphanumeric characters, spaces and apostrophes.
+=======
+      Genre name must contain only alphanumeric characters and spaces.
+>>>>>>> 2ae07ebf7fa13fcb35bc3564d7116dd65ee8c52e
     </div>
   </div>
 
