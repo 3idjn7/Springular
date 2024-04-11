@@ -4,19 +4,19 @@ h2 {
   margin-bottom: 20px;
 }
 
-.actor-controls,
-.genre-controls {
+.actor-controls{
+  position: relative;
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
   /* Aligns items to the start and end of the container */
-  align-items: center;
+  align-items: flex-start;
   margin-bottom: 20px;
   padding: 0 20px;
   /* Adds padding to the left and right */
 }
 
-.actor-controls input[type="text"],
-.genre-controls input[type="text"] {
+.actor-controls input[type="text"] {
   flex-grow: 1;
   /* Allows input to grow and fill available space */
   margin-right: 10px;
@@ -55,6 +55,13 @@ ul.genres li {
 }
 
 /* Button styles */
+.buttons {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  padding: 0;
+}
+
 button {
   padding: 10px 16px;
   margin-right: 8px;
@@ -98,16 +105,14 @@ button.btn-back {
     /* Adjusts padding for smaller screens */
   }
 
-  .actor-controls input[type="text"],
-  .genre-controls input[type="text"] {
+  .actor-controls input[type="text"] {
     width: 100%;
     /* Full width on small screens */
     margin-bottom: 10px;
     /* Adds space below the input */
   }
 
-  ul.actors,
-  ul.genres {
+  ul.actors {
     margin: 0 10px;
     /* Adjusts margin for smaller screens */
   }

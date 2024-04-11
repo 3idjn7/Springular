@@ -3,12 +3,11 @@
 <div class="genre-controls">
   <input type="text" [(ngModel)]="newGenre" #newGenreInput="ngModel" required minlength="3" maxlength="50"
     pattern="[a-zA-Z0-9' ]*" placeholder="New Genre Name" class="form-control">
-  <div class="buttons">
-    <button (click)="addGenre()" [disabled]="newGenreInput.invalid" class="btn">Add Genre</button>
-    <button (click)="goBack()" class="btn btn-back">Back</button>
-  </div>
-</div>
-<div class="validation-messages">
+
+  <div class="validation-messages">
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
     <div *ngIf="newGenreInput.errors?.['required'] && newGenreInput.touched" class="error-message">
       Genre name is required.
     </div>
@@ -23,6 +22,11 @@
     </div>
   </div>
 
+    <div class="buttons">
+      <button (click)="addGenre()" [disabled]="newGenreInput.invalid" class="btn">Add Genre</button>
+      <button (click)="goBack()" class="btn btn-back">Back</button>
+    </div>
+</div>
 
 <ul class="genres">
   <li *ngFor="let genre of genres">

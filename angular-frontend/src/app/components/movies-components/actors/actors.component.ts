@@ -13,6 +13,7 @@ import { takeUntil } from 'rxjs/operators';
 export class ActorsComponent implements OnInit, OnDestroy {
   actors: Actor[] = [];
   newActor: string = '';
+  errorMessage: string = '';
   private unsubscribe$ = new Subject<void>();
 
   constructor(
@@ -55,10 +56,21 @@ export class ActorsComponent implements OnInit, OnDestroy {
   // Handle adding a new actor
   addActor(): void {
     if (this.newActor) {
-      this.actorService.addActor(this.newActor).subscribe(actor => {
-        this.actors.push(actor);
-        this.newActor = '';
-      });
+      if (this.actors.some(actor => actor.name.toLowerCase() === this.newActor.toLowerCase())) {
+        this.errorMessage = 'Actor already exists.';
+      } else {
+        this.actorService.addActor(this.newActor).subscribe(
+          actor => {
+            this.actors.push(actor);
+            this.newActor = '';
+            this.errorMessage = '';
+          },
+          error => {
+            console.error('Error adding actor:', error);
+            this.errorMessage = 'Failed to add actor.';
+          }
+        );
+      }
     }
   }
 

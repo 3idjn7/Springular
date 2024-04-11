@@ -8,17 +8,15 @@ import { takeUntil } from 'rxjs/operators';
 @Component({
   selector: 'app-genres',
   templateUrl: './genres.component.html',
-  styleUrls: ['./genres.component.css']
+  styleUrls: ['./genres.component.css'],
 })
 export class GenresComponent implements OnInit, OnDestroy {
   genres: Genre[] = [];
   newGenre: string = '';
+  errorMessage: string = '';
   private unsubscribe$ = new Subject<void>();
 
-  constructor(
-    private genreService: GenreService,
-    private location: Location,
-  ) { }
+  constructor(private genreService: GenreService, private location: Location) {}
 
   ngOnInit() {
     // Initialize component
@@ -34,9 +32,10 @@ export class GenresComponent implements OnInit, OnDestroy {
   // Retrieve genres when the component initializes
   getGenres(): void {
     console.log('Fetching genres...');
-    this.genreService.getGenres()
+    this.genreService
+      .getGenres()
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(genres => {
+      .subscribe((genres) => {
         console.log('Genres fetched:', genres);
         this.genres = genres;
       });
@@ -45,7 +44,7 @@ export class GenresComponent implements OnInit, OnDestroy {
   // Handle deletion of a genre
   deleteGenre(genre: Genre): void {
     if (confirm(`Are you sure you want to delete ${genre.name}?`)) {
-      this.genres = this.genres.filter(g => g !== genre);
+      this.genres = this.genres.filter((g) => g !== genre);
       this.genreService.deleteGenre(genre.id).subscribe(() => {
         console.log('Genre deleted:', genre);
       });
@@ -55,14 +54,25 @@ export class GenresComponent implements OnInit, OnDestroy {
   // Handle adding a new genre
   addGenre(): void {
     if (this.newGenre) {
-      console.log('Adding genre:', this.newGenre);
-      this.genreService.addGenre(this.newGenre).subscribe(genre => {
-        console.log('Genre added:', genre);
-        this.genres.push(genre);
-        this.newGenre = '';
-      });
-    } else {
-      console.log('New genre input is empty. No genre added.');
+      if (
+        this.genres.some(
+          (genre) => genre.name.toLowerCase() === this.newGenre.toLowerCase()
+        )
+      ) {
+        this.errorMessage = 'Genre already exists.'; // Set error message if genre exists
+      } else {
+        this.genreService.addGenre(this.newGenre).subscribe(
+          (genre) => {
+            this.genres.push(genre);
+            this.newGenre = '';
+            this.errorMessage = ''; // Clear the error message on successful addition
+          },
+          (error) => {
+            console.error('Error adding genre:', error);
+            this.errorMessage = 'Failed to add genre.'; // Set error message on failure
+          }
+        );
+      }
     }
   }
 
